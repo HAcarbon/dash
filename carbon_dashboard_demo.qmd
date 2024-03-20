@@ -1,9 +1,9 @@
 ---
-title: "Dashboard demo"
+title: "HAU Carbon"
 logo: "images/nl_agridat_hex_tp.png"
 format: dashboard
 date: 2024-03-12
-date-modified: 2024-03-13
+date-modified: 2024-03-20
 orientation: columns
 expandable: false
 theme: 
@@ -11,7 +11,7 @@ theme:
   dark: darkly_edited.scss
 ---
 
-# Updated version
+# Emissions Source
 
 ```{r Dashboard set up, echo=FALSE}
 library(tidyverse)
@@ -73,6 +73,8 @@ my_comma <-
 
 latest_year <- max(carbon_data$Year)
 previous_year = latest_year - 1
+s_cur_year <- latest_year-2000
+s_prev_year <- previous_year - 2000
 
 current_net_co2e <- as.numeric(as.list(
   carbon_data %>%
@@ -152,19 +154,18 @@ an_seq_forest_hedge_current <-
 
 ### Row {title="summaryboxes" height="25%"}
 
-```{r Latest available data value box a}
+```{r Total co2e produced in 2022 value boxa}
 bslib::value_box(
-  title = "Latest available data",
-  value = latest_year,
-  theme = "secondary",
+  title = h1(HTML("Total CO<sub>2</sub>e"),latest_year),
+  value = my_comma(tot_co2e_current),
+  p(HTML("Kt CO<sub>2</sub>e")),
+  theme = "warning"
   )
-
-
 ```
 
 ```{r net emissions in 2022 value boxa}
 bslib::value_box(
-  title = "Net emissions ",
+  title = paste("Net emissions\n", latest_year),
   value = my_comma(current_net_co2e),
    p(HTML("Kt CO<sub>2</sub>e")),
   theme = "info"
@@ -174,12 +175,11 @@ bslib::value_box(
 
 ```{r net emissions reduction 21-22 value boxa}
 bslib::value_box(
-  title = "Net emission reduction",
+  title = paste("Net emission reduction \n ", s_prev_year, "/", s_cur_year ),
   value = my_comma(carbon_reduction_current_previous),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "success"
   )
-
 
 ```
 
@@ -260,11 +260,12 @@ leaflet(carbon_data) %>%
   addMarkers(lng=-2.434319, lat=52.780052, popup=dairy_popup, icon = dairy_icon ) %>%
   #addMarkers(lng=-2.432867, lat=52.780706, popup="Robot dairy unit", icon = robot_icon ) %>%
   addMarkers(lng=-2.430173, lat=52.779969, popup=pig_popup, icon = pig_icon) %>%
-  addMarkers(lng=-2.430332, lat=52.780733, popup=sheep_popup, icon = sheep_icon) %>%
-  addMarkers(lng=-2.430499, lat=52.780594, popup=beef_popup, icon = beef_icon) %>%
-  addMarkers(lng=-2.432260, lat=52.779504, popup="Future Farm Office", icon =office_icon) %>%
+  addMarkers(lng=-2.430597, lat=52.780818, popup=sheep_popup, icon = sheep_icon) %>%
+  addMarkers(lng=-2.430253, lat=52.780475, popup=beef_popup, icon = beef_icon) %>%
+  addMarkers(lng=-2.432260, lat=52.779504, popup ="Future Farm Office ", icon =office_icon) %>%
+  # addMarkers(lng = -2.433879, lat = 52.780927, label = "Click on an icon for summary information", labelOptions = labelOptions(noHide = T)) %>%
   addScaleBar(position = "bottomright") 
-
+ 
 
 ```
 
@@ -276,14 +277,28 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 **N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
 :::
 
-::: {.card title="Data limitations"}
+::: {.card title="Data files"}
+**HAU carbon clean dataset:**
+
+```{r}
+library(downloadthis)
+
+carbon_data %>%
+  download_this(
+    output_name = "HAU_carbon_clean_dataset",
+    output_extension = ".csv",
+    button_label = "Download data as csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-save",
+    class = "hvr-sweep-to-left"
+  )
+
+```
+**Disclaimer:**
 -   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
 -   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
-:::
-
-::: {.card title="Data files"}
-Data download coming soon!
 :::
 
 ::: {.card title="Useful information"}
@@ -694,43 +709,32 @@ c_data %>%
 
 ```{r data table}
 #| title: Data table
+#| 
 
 datatable(carbon_data %>% 
             select(-farm_area),
           filter = list(position = 'top', clear = FALSE),
-          options = list(pageLength = 10))
+          options = list(pageLength = 10)) 
 ```
 
-# Carbon - simple {#carbon}
+# By sector
 
 ## Column {width="40%"}
 
-### Row {height="30%"}
-
-```{r Latest available data value box}
-bslib::value_box(
-  title = "Latest available data",
-  value = latest_year,
-  theme = "secondary",
-  )
-
-
-```
+### Row {height="25%"}
 
 ```{r Total co2e produced in 2022 value box}
 bslib::value_box(
-  title = h1(HTML("Total CO<sub>2</sub>e produced in 2022")),
+  title = h1(HTML("Total CO<sub>2</sub>e"),latest_year),
   value = my_comma(tot_co2e_current),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "warning"
   )
 ```
 
-### Row {height="30%"}
-
 ```{r net emissions in 2022 value box}
 bslib::value_box(
-  title = "Net emissions in 2022",
+  title = paste("Net emissions\n", latest_year),
   value = my_comma(current_net_co2e),
    p(HTML("Kt CO<sub>2</sub>e")),
   theme = "info"
@@ -740,33 +744,65 @@ bslib::value_box(
 
 ```{r net emissions reduction 21-22 value box}
 bslib::value_box(
-  title = "2021/22 Net emission reduction",
+  title = paste("Net emission reduction \n ", s_prev_year, "/", s_cur_year ),
   value = my_comma(carbon_reduction_current_previous),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "success"
   )
 
+```
+
+### Row {.tabset height="75%"}
+
+```{r leaflet}
+#| title: Map
+ 
+leaflet(carbon_data) %>%
+  fitBounds(lng1 = -2.435130, lat1 = 52.779020, lng2 = -2.429167, lat2 = 52.781648 ) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=-2.427, lat=52.779, popup="Harper Adams University", icon = uni_icon) %>%
+  addMarkers(lng=-2.434319, lat=52.780052, popup=dairy_popup, icon = dairy_icon ) %>%
+  #addMarkers(lng=-2.432867, lat=52.780706, popup="Robot dairy unit", icon = robot_icon ) %>%
+  addMarkers(lng=-2.430173, lat=52.779969, popup=pig_popup, icon = pig_icon) %>%
+  addMarkers(lng=-2.430332, lat=52.780733, popup=sheep_popup, icon = sheep_icon) %>%
+  addMarkers(lng=-2.430499, lat=52.780594, popup=beef_popup, icon = beef_icon) %>%
+  addMarkers(lng=-2.432260, lat=52.779504, popup="Future Farm Office", icon =office_icon) %>%
+    # addMarkers(lng = -2.433879, lat = 52.780927, label = "Click on an icon for summary information", labelOptions = labelOptions(noHide = T)) %>%
+  addScaleBar(position = "bottomright") 
+
 
 ```
 
-### Row {.tabset height="40%"}
-
 ::: {.card title="Data source"}
-This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Data inputted into the Agrecalc carbon calculator were collated from across the farm for each year.
+This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
 
 [**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
 **N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
 :::
 
-::: {.card title="Data limitations"}
+::: {.card title="Data files"}
+**HAU carbon clean dataset:**
+
+```{r}
+library(downloadthis)
+
+carbon_data %>%
+  download_this(
+    output_name = "HAU_carbon_clean_dataset",
+    output_extension = ".csv",
+    button_label = "Download data as csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-save",
+    class = "hvr-sweep-to-left"
+  )
+
+```
+**Disclaimer:**
 -   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
 -   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
-:::
-
-::: {.card title="Data files"}
-Data file download coming soon!
 :::
 
 ::: {.card title="Useful information"}
