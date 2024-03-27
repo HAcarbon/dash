@@ -24,12 +24,20 @@ library(bslib)
 library(shiny)
 library(bsicons)
 library(htmltools)
+library(readxl)
 
 carbon_data <- read.csv("www/carbon_data_clean.csv") %>%
   mutate(lineitem_code = factor(
     lineitem_code,
     levels = c("DAIRY", "BEEF", "PIGS", "SHEEP", "WHOLE_FARM")
   ))
+
+data_dict <- read_xlsx("www/Carbon_data_agrecalc_v02.xlsx", sheet = 5, skip = 7, n_max = 74)
+
+other_dict <- read_xlsx("www/Carbon_data_agrecalc_v02.xlsx", sheet = 5, skip = 83, col_names = FALSE) %>%
+  select(`...1`, `...4`) %>%
+  rename(sector = `...1`,
+         Description = `...4`)
 
 ## Theme ----  
 theme_m.rl <- theme(
@@ -276,33 +284,6 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 [**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
 **N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
-:::
-
-::: {.card title="Data files"}
-[**HAU Carbon data (inc. data dictionary)**](docs/data/Carbon_data_agrecalc_v02.xlsx)
-
-```{r}
-# library(downloadthis)
-# 
-# carbon_data %>%
-#   download_this(
-#     output_name = "HAU_carbon_clean_dataset",
-#     output_extension = ".csv",
-#     button_label = "Download data as csv",
-#     button_type = "default",
-#     has_icon = TRUE,
-#     icon = "fa fa-save",
-#     class = "hvr-sweep-to-left",
-#     csv2 = TRUE
-#   )
-# 
-# 
-# download
-
-
-```
-
-
 
 **Disclaimer:**
 -   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
@@ -716,16 +697,37 @@ c_data %>%
 
 ```
 
-```{r data table}
-#| title: Data table
-#| 
 
-datatable(carbon_data %>% 
+```{r} 
+#| title: Data (download)
+
+datatable(carbon_data %>%
             select(-farm_area),
           filter = list(position = 'top', clear = FALSE),
-          options = list(pageLength = 10,
-                         dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))) 
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))) %>%
+  formatRound(columns = c(5:72), digits = 2, mark ="", dec.mark = ".")
+```
+
+```{r}
+#| title: Data dictionary - variables
+
+datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+
+```
+
+```{r}
+#| title: Data dictionary - Other
+
+datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+
 ```
 
 # By sector
@@ -790,25 +792,11 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 [**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
 **N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
-:::
-
-::: {.card title="Data files"}
-[**HAU Carbon data (inc. data dictionary)**](docs/data/Carbon_data_agrecalc_v02.xlsx)
 
 **Disclaimer:**
 -   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
 -   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
-:::
-
-::: {.card title="Useful information"}
-**IPCC** :: Intergovernmental Panel on Climate Change.
-
-**Carbon dioxide equivalent (CO**<sub>2</sub>e) :: The unit for measuring the **global warming potentials (GWP)** of greenhouse gases relative to that of carbon dioxide (CO<sub>2</sub>).
-
-**Scope 1** :: Direct greenhouse gas emissions that occur from sources that are controlled or owned by an organisation (e.g., emissions from fuel combustion, vehicles etc.)
-
-**Scope 2** :: Indirect greenhouse gas emissions associated with the purchase of electricity, steam, heat or cooling (e.g., emissions from electricity used in buildings)
 :::
 
 ## Column {.tabset width="60%"}
@@ -993,11 +981,34 @@ mutate(emission = values/1000000) %>%
 # )
 ```
 
-```{r data table a}
-#| title: Data table
+```{r} 
+#| title: Data (download)
 
-datatable(carbon_data %>% 
+datatable(carbon_data %>%
             select(-farm_area),
           filter = list(position = 'top', clear = FALSE),
-          options = list(pageLength = 10))
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))) %>%
+  formatRound(columns = c(5:72), digits = 2, mark ="", dec.mark = ".")
+```
+
+```{r}
+#| title: Data dictionary - variables
+
+datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+
+```
+
+```{r}
+#| title: Data dictionary - Other
+
+datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+
 ```
