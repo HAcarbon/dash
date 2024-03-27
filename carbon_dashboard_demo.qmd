@@ -3,12 +3,13 @@ title: "HAU Carbon"
 logo: "images/nl_agridat_hex_tp.png"
 format: dashboard
 date: 2024-03-12
-date-modified: 2024-03-20
+date-modified: 2024-03-27
 orientation: columns
 expandable: false
 theme: 
   light: flatly_edited.scss
   dark: darkly_edited.scss
+embed-resources: true
 ---
 
 # Emissions Source
@@ -24,7 +25,7 @@ library(shiny)
 library(bsicons)
 library(htmltools)
 
-carbon_data <- read.csv("data/carbon_data_clean.csv") %>%
+carbon_data <- read.csv("www/carbon_data_clean.csv") %>%
   mutate(lineitem_code = factor(
     lineitem_code,
     levels = c("DAIRY", "BEEF", "PIGS", "SHEEP", "WHOLE_FARM")
@@ -278,23 +279,31 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 :::
 
 ::: {.card title="Data files"}
-**HAU carbon clean dataset:**
+[**HAU Carbon data (inc. data dictionary)**](docs/data/Carbon_data_agrecalc_v02.xlsx)
 
 ```{r}
-library(downloadthis)
+# library(downloadthis)
+# 
+# carbon_data %>%
+#   download_this(
+#     output_name = "HAU_carbon_clean_dataset",
+#     output_extension = ".csv",
+#     button_label = "Download data as csv",
+#     button_type = "default",
+#     has_icon = TRUE,
+#     icon = "fa fa-save",
+#     class = "hvr-sweep-to-left",
+#     csv2 = TRUE
+#   )
+# 
+# 
+# download
 
-carbon_data %>%
-  download_this(
-    output_name = "HAU_carbon_clean_dataset",
-    output_extension = ".csv",
-    button_label = "Download data as csv",
-    button_type = "default",
-    has_icon = TRUE,
-    icon = "fa fa-save",
-    class = "hvr-sweep-to-left"
-  )
 
 ```
+
+
+
 **Disclaimer:**
 -   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
@@ -714,7 +723,9 @@ c_data %>%
 datatable(carbon_data %>% 
             select(-farm_area),
           filter = list(position = 'top', clear = FALSE),
-          options = list(pageLength = 10)) 
+          options = list(pageLength = 10,
+                         dom = 'Bfrtip',
+                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))) 
 ```
 
 # By sector
@@ -782,23 +793,8 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 :::
 
 ::: {.card title="Data files"}
-**HAU carbon clean dataset:**
+[**HAU Carbon data (inc. data dictionary)**](docs/data/Carbon_data_agrecalc_v02.xlsx)
 
-```{r}
-library(downloadthis)
-
-carbon_data %>%
-  download_this(
-    output_name = "HAU_carbon_clean_dataset",
-    output_extension = ".csv",
-    button_label = "Download data as csv",
-    button_type = "default",
-    has_icon = TRUE,
-    icon = "fa fa-save",
-    class = "hvr-sweep-to-left"
-  )
-
-```
 **Disclaimer:**
 -   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
