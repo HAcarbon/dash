@@ -6,10 +6,9 @@ date: 2024-03-12
 date-modified: 2024-03-27
 orientation: columns
 expandable: false
-theme: 
-  light: flatly_edited.scss
-  dark: darkly_edited.scss
+theme: flatly_edited.scss
 embed-resources: true
+resources: "docs/HAcarbon_master_2022.xlsx"
 ---
 
 # Emissions Source
@@ -32,12 +31,9 @@ carbon_data <- read.csv("www/carbon_data_clean.csv") %>%
     levels = c("DAIRY", "BEEF", "PIGS", "SHEEP", "WHOLE_FARM")
   ))
 
-data_dict <- read_xlsx("www/Carbon_data_agrecalc_v02.xlsx", sheet = 5, skip = 7, n_max = 74)
+data_dict <- read_xlsx("www/HAcarbon_master_2022.xlsx", sheet = 5)
 
-other_dict <- read_xlsx("www/Carbon_data_agrecalc_v02.xlsx", sheet = 5, skip = 83, col_names = FALSE) %>%
-  select(`...1`, `...4`) %>%
-  rename(sector = `...1`,
-         Description = `...4`)
+other_dict <- read_xlsx("www/HAcarbon_master_2022.xlsx", sheet = 6) 
 
 ## Theme ----  
 theme_m.rl <- theme(
@@ -278,18 +274,6 @@ leaflet(carbon_data) %>%
 
 ```
 
-::: {.card title="Data source"}
-This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
-
-[**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
-
-**N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
-
-**Disclaimer:**
--   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
-
--   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
-:::
 
 ::: {.card title="Useful information"}
 **IPCC** :: Intergovernmental Panel on Climate Change.
@@ -698,38 +682,6 @@ c_data %>%
 ```
 
 
-```{r} 
-#| title: Data (download)
-
-datatable(carbon_data %>%
-            select(-farm_area),
-          filter = list(position = 'top', clear = FALSE),
-          extensions = 'Buttons',
-          options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))) %>%
-  formatRound(columns = c(5:72), digits = 2, mark ="", dec.mark = ".")
-```
-
-```{r}
-#| title: Data dictionary - variables
-
-datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
-          extensions = 'Buttons',
-          options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
-
-```
-
-```{r}
-#| title: Data dictionary - Other
-
-datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
-          extensions = 'Buttons',
-          options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
-
-```
-
 # By sector
 
 ## Column {width="40%"}
@@ -786,18 +738,7 @@ leaflet(carbon_data) %>%
 
 ```
 
-::: {.card title="Data source"}
-This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
 
-[**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
-
-**N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
-
-**Disclaimer:**
--   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
-
--   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
-:::
 
 ## Column {.tabset width="60%"}
 
@@ -981,6 +922,9 @@ mutate(emission = values/1000000) %>%
 # )
 ```
 
+
+# Data 
+## Column {.tabset width="70%"}
 ```{r} 
 #| title: Data (download)
 
@@ -989,9 +933,27 @@ datatable(carbon_data %>%
           filter = list(position = 'top', clear = FALSE),
           extensions = 'Buttons',
           options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))) %>%
+                         buttons = c('copy', 'csv', 'excel'))) %>%
   formatRound(columns = c(5:72), digits = 2, mark ="", dec.mark = ".")
 ```
+
+## Column {width="30%"}
+
+### Row {.tabset }
+
+::: {.card title="Data source"}
+This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
+
+[**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
+
+**N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
+
+**Disclaimer:**
+-   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
+
+-   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
+:::
+
 
 ```{r}
 #| title: Data dictionary - variables
@@ -999,9 +961,10 @@ datatable(carbon_data %>%
 datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
           extensions = 'Buttons',
           options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+                         buttons = c('copy', 'csv', 'excel')))
 
 ```
+
 
 ```{r}
 #| title: Data dictionary - Other
@@ -1009,6 +972,26 @@ datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
 datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
           extensions = 'Buttons',
           options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+                         buttons = c('copy', 'csv', 'excel')))
 
 ```
+
+### Row
+::: {.card title="Data download"}
+ ```{r}
+# ui <- fluidPage(
+#   downloadButton("download1"),
+#   downloadLink("download2")
+# )
+
+# output$download <- downloadHandler(
+#   filename = function() {
+#     paste0(input$dataset, ".xlsx")
+#   },
+#   content = function(file) {
+#     write.csv(data(), file)
+#   }
+# )
+```
+:::
+
