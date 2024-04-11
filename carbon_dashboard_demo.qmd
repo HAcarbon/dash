@@ -9,7 +9,6 @@ expandable: false
 theme: flatly_edited.scss
 embed-resources: true
 resources: "docs/HAcarbon_master_2022.xlsx"
-
 ---
 
 # Emissions Source
@@ -191,7 +190,7 @@ bslib::value_box(
 
 ```
 
-### Row {.tabset height="75%"}
+### Row {height="75%"}
 
 ```{r leaflet prepa}
 #| context: setup
@@ -261,8 +260,7 @@ library(leaflet)
 ```
 
 ```{r leafleta}
-#| title: Map
- 
+
 leaflet(carbon_data) %>%
   fitBounds(lng1 = -2.435130, lat1 = 52.779020, lng2 = -2.429167, lat2 = 52.781648 ) %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
@@ -285,17 +283,6 @@ leaflet(carbon_data) %>%
  
 
 ```
-
-
-::: {.card title="Useful information"}
-**IPCC** :: Intergovernmental Panel on Climate Change.
-
-**Carbon dioxide equivalent (CO**<sub>2</sub>e) :: The unit for measuring the **global warming potentials (GWP)** of greenhouse gases relative to that of carbon dioxide (CO<sub>2</sub>).
-
-**Scope 1** :: Direct greenhouse gas emissions that occur from sources that are controlled or owned by an organisation (e.g., emissions from fuel combustion, vehicles etc.)
-
-**Scope 2** :: Indirect greenhouse gas emissions associated with the purchase of electricity, steam, heat or cooling (e.g., emissions from electricity used in buildings)
-:::
 
 ## Column {Width="60%"}
 
@@ -345,6 +332,8 @@ leaflet(carbon_data) %>%
 
 ```{r}
 #| title: Direct carbon 
+#| fig-cap: The total annual direct (Scope 1) carbon emissions produced from each livestock sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of direct carbon emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+
 
 
 # In theory I could get this to be interactive by replacing the filter bits with whatever is selected
@@ -369,6 +358,7 @@ dir_pal <- c("darkorange", "orangered", "indianred4", "firebrick", "tan3" ) # da
 
 ```{r}
 #| title: Indirect carbon
+#| fig-cap: The total annual indirect (Scope 2) carbon emissions produced from each livestock sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of indirect carbon emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 
 # In theory I could get this to be interactive by replacing the filter bits with whatever is selected
@@ -395,7 +385,7 @@ indir_pal <- c("lightsalmon","orange","coral",  "chocolate1", "sienna3", "tomato
 
 ```{r}
 #| title: Methane
-
+#| fig-cap: The total annual methane emissions (as equivalent carbon dioxide) produced from each livestock sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of methane emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 # In theory I could get this to be interactive by replacing the filter bits with whatever is selected
 
@@ -422,7 +412,7 @@ ch4_pal <-c("mediumorchid4","mediumorchid1") # purpleblue
 
 ```{r}
 #| title: Nitrous oxide
-
+#| fig-cap: The total annual nitrous oxide emissions (as equivalent carbon dioxide) produced from each livestock sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of nitrous oxide emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 n2o_pal <- c("maroon3","hotpink","lightpink") #pink purple
 
@@ -448,6 +438,7 @@ n2o_pal <- c("maroon3","hotpink","lightpink") #pink purple
 
 ```{r}
 #| title: Dairy
+#| fig-cap: The total annual GHG emissions produced from the dairy sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of direct carbon emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
  
 detail_ghg_pal <- c("darkorange", 
                     "orangered",
@@ -527,6 +518,7 @@ c_data %>%
 
 ```{r}
 #| title: Beef
+#| fig-cap: The total annual GHG emissions produced from the beef sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of direct carbon emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 c_data %>% 
        filter(lineitem_code == "BEEF") %>%
     filter(ghg_summary == "measure") %>% 
@@ -583,6 +575,7 @@ c_data %>%
 
 ```{r}
 #| title: Sheep
+#| fig-cap: The total annual GHG emissions produced from the sheep sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of direct carbon emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 c_data %>% 
        filter(lineitem_code == "SHEEP") %>%
@@ -639,6 +632,7 @@ c_data %>%
 
 ```{r}
 #| title: Pigs
+#| fig-cap: The total annual GHG emissions produced from the pigs sector of the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the individual sources of direct carbon emissions. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 c_data %>% 
        filter(lineitem_code == "PIGS") %>%
@@ -693,7 +687,6 @@ c_data %>%
 
 ```
 
-
 # By sector
 
 ## Column {width="40%"}
@@ -728,10 +721,11 @@ bslib::value_box(
   )
 
 ```
-### Row {.tabset height="75%"}
+
+### Row {height="75%"}
 
 ```{r leaflet}
-#| title: Map
+
  
 leaflet(carbon_data) %>%
   fitBounds(lng1 = -2.435130, lat1 = 52.779020, lng2 = -2.429167, lat2 = 52.781648 ) %>%
@@ -740,7 +734,7 @@ leaflet(carbon_data) %>%
   addMarkers(lng=-2.434319, lat=52.780052, popup=dairy_popup, icon = dairy_icon ) %>%
   #addMarkers(lng=-2.432867, lat=52.780706, popup="Robot dairy unit", icon = robot_icon ) %>%
   addMarkers(lng=-2.430173, lat=52.779969, popup=pig_popup, icon = pig_icon) %>%
-  addMarkers(lng=-2.430597, lat=52.780818,, popup=sheep_popup, icon = sheep_icon) %>%
+  addMarkers(lng=-2.430597, lat=52.780818, popup=sheep_popup, icon = sheep_icon) %>%
   addMarkers(lng=-2.430499, lat=52.780594, popup=beef_popup, icon = beef_icon) %>%
   addMarkers(lng=-2.432260, lat=52.779504, popup="Click here to view info", icon =office_icon) %>%
     # addMarkers(lng = -2.433879, lat = 52.780927, label = "Click on an icon for summary information", labelOptions = labelOptions(noHide = T)) %>%
@@ -749,13 +743,11 @@ leaflet(carbon_data) %>%
 
 ```
 
-
-
 ## Column {.tabset width="60%"}
 
 ```{r total GHG emission graph}
 #| title: Total GHG Emissions
-#| fig-cap: The total annual tonnes of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 
 carbon_data %>%
@@ -777,7 +769,7 @@ ggplot( aes(x = Year, y = carbon_equiv_tot, fill = lineitem_code)) +
 
 ```{r direct carbon graph}
 #| title: Direct Carbon
-#| fig-cap: The total annual tonnes of direct (Scope 1) carbon dioxide emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of direct (Scope 1) carbon dioxide emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 carbon_data %>%
   mutate(direct_carbon_tot = co2_direct_co2_kgco2e/1000000) %>%
@@ -799,7 +791,7 @@ ggplot( aes(x = Year, y = direct_carbon_tot, fill = lineitem_code)) +
 
 ```{r indirect carbon graph}
 #| title: Indirect Carbon 
-#| fig-cap: The total annual tonnes of indirect (Scope 2) carbon dioxide emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of indirect (Scope 2) carbon dioxide emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 
 carbon_data %>%
@@ -822,7 +814,7 @@ ggplot( aes(x = Year, y = indirect_carbon_tot, fill = lineitem_code)) +
 
 ```{r methane graph}
 #| title: Methane
-#| fig-cap: The total annual tonnes of methane as carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of methane as carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 
 carbon_data %>%
@@ -845,7 +837,7 @@ ggplot( aes(x = Year, y = methane, fill = lineitem_code)) +
 
 ```{r nitrous oxide graph}
 #| title: Nitrous Oxide
-#| fig-cap: The total annual tonnes of nitrous oxide as carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of nitrous oxide as carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2020 to 2022. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 carbon_data %>%
   mutate(nitrous_oxide = nitrous_oxide_total_kgco2e/1000000) %>%
@@ -869,7 +861,7 @@ ggplot( aes(x = Year, y = nitrous_oxide, fill = lineitem_code)) +
 
 ```{r ghg contributions graph}
 #| title: GHG contributions
-#| fig-cap: The total annual tonnes of green house gas (GHG) emissions (based on GWP equivlaent calculations) produced per year on the Harper Adams Future Farm presenting the quantity of the four types of GHG recorded during teh carbon calculation. Colours represent different GHG types.Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of green house gas (GHG) emissions (based on GWP equivlaent calculations) produced per year on the Harper Adams Future Farm presenting the quantity of the four types of GHG recorded during teh carbon calculation. Colours represent different GHG types.Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 carbon_data %>% 
   rename(direct = co2_direct_co2_kgco2e,
@@ -900,7 +892,7 @@ mutate(emission = values/1000000) %>%
 
 ```{r ghg contributions by sector graph}
 #| title: GHG contributions by sector
-#| fig-cap: The total annual tonnes of green house gas (GHG) emissions produced per year by the Harper Adams Future Farm showing contributions from individual sectors on the farm for each GHG type recorded. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total annual kilotonnes of green house gas (GHG) emissions produced per year by the Harper Adams Future Farm showing contributions from individual sectors on the farm for each GHG type recorded. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 carbon_data %>% 
   rename('Direct carbon' = co2_direct_co2_kgco2e,
@@ -933,10 +925,11 @@ mutate(emission = values/1000000) %>%
 # )
 ```
 
+# Data
 
-# Data 
 ## Column {.tabset width="70%"}
-```{r} 
+
+```{r}
 #| title: Data 
 datatable(carbon_data %>%
             select(-farm_area),
@@ -967,13 +960,12 @@ datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
 
 ```
 
-
 ## Column {width="30%"}
 
 ### Row {height="25%"}
-::: {.card title="Download the data"}
 
-[Downlad excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2022.xlsx)
+::: {.card title="Download the data"}
+[Download excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2022.xlsx)
 :::
 
 ### Row {.tabset height="75%"}
@@ -981,18 +973,13 @@ datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
 ::: {.card title="Information"}
 This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
 
-**Comments**    
+**Comments**
 
-- Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
+-   Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
-- Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
+-   Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
 
-- Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
+-   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
-- The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
+-   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
 :::
-
-
-
-
-
