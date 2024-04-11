@@ -164,7 +164,7 @@ an_seq_forest_hedge_current <-
 
 ```{r Total co2e produced in 2022 value boxa}
 bslib::value_box(
-  title = h1(HTML("Total CO<sub>2</sub>e"),latest_year),
+  title = h1(HTML("Total CO<sub>2</sub>e<br>"),latest_year),
   value = my_comma(tot_co2e_current),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "warning"
@@ -173,7 +173,7 @@ bslib::value_box(
 
 ```{r net emissions in 2022 value boxa}
 bslib::value_box(
-  title = paste("Net emissions\n", latest_year),
+  title = h1(HTML("Net emissions<br>"),latest_year),
   value = my_comma(current_net_co2e),
    p(HTML("Kt CO<sub>2</sub>e")),
   theme = "info"
@@ -183,7 +183,7 @@ bslib::value_box(
 
 ```{r net emissions reduction 21-22 value boxa}
 bslib::value_box(
-  title = paste("Net emission reduction \n ", s_prev_year, "/", s_cur_year ),
+  title = h1(HTML("Net emission reduction <br>", s_prev_year, "/", s_cur_year )),
   value = my_comma(carbon_reduction_current_previous),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "success"
@@ -702,7 +702,7 @@ c_data %>%
 
 ```{r Total co2e produced in 2022 value box}
 bslib::value_box(
-  title = h1(HTML("Total CO<sub>2</sub>e"),latest_year),
+  title = h1(HTML("Total CO<sub>2</sub>e<br>"),latest_year),
   value = my_comma(tot_co2e_current),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "warning"
@@ -711,7 +711,7 @@ bslib::value_box(
 
 ```{r net emissions in 2022 value box}
 bslib::value_box(
-  title = paste("Net emissions\n", latest_year),
+  title = h1(HTML("Net emissions<br>"),latest_year),
   value = my_comma(current_net_co2e),
    p(HTML("Kt CO<sub>2</sub>e")),
   theme = "info"
@@ -721,14 +721,13 @@ bslib::value_box(
 
 ```{r net emissions reduction 21-22 value box}
 bslib::value_box(
-  title = paste("Net emission reduction \n ", s_prev_year, "/", s_cur_year ),
+  title = h1(HTML("Net emission reduction <br>", s_prev_year, "/", s_cur_year )),
   value = my_comma(carbon_reduction_current_previous),
   p(HTML("Kt CO<sub>2</sub>e")),
   theme = "success"
   )
 
 ```
-
 ### Row {.tabset height="75%"}
 
 ```{r leaflet}
@@ -938,8 +937,7 @@ mutate(emission = values/1000000) %>%
 # Data 
 ## Column {.tabset width="70%"}
 ```{r} 
-#| title: Data (download)
-
+#| title: Data 
 datatable(carbon_data %>%
             select(-farm_area),
           filter = list(position = 'top', clear = FALSE),
@@ -973,42 +971,18 @@ datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
 ## Column {width="30%"}
 
 ### Row {height="25%"}
-::: {.card title="Data download"}
-```{r}
-# ui <- fluidPage(
-#    downloadButton("download", "Download excel file")
-#  )
-# 
-# 
-# server <- function(input, output, session) {
-#   
-#   data <- list(carbon_data, data_dict, other_dict)
-#  
-#  output$download <- downloadHandler(
-#    filename = function() {
-#      paste0("HAcarbon", 
-#             #lastest_year, 
-#             ".xlsx")
-#    },
-#    content = function(file) {
-#      writexl::write_xlsx(data(), path = "HACarbon_2022", col_names = TRUE)
-#    }
-#  )
-# }
-# 
-# shinyApp(ui,server)
-
-```
+::: {.card title="Download the data"}
 
 [Downlad excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2022.xlsx)
 :::
 
 ### Row {.tabset height="75%"}
 
-::: {.card title="Data source"}
+::: {.card title="Information"}
 This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
 
-**Comments** 
+**Comments**    
+
 - Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
 - Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
