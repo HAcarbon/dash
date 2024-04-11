@@ -15,16 +15,16 @@ resources: "docs/HAcarbon_master_2022.xlsx"
 # Emissions Source
 
 ```{r Dashboard set up, echo=FALSE}
-library(tidyverse)
-library(knitr)
-library(rmarkdown)
-library(ggplot2)
-library(DT)
-library(bslib)
-library(shiny)
-library(bsicons)
-library(htmltools)
-library(readxl)
+require(tidyverse)
+require(knitr)
+require(rmarkdown)
+require(ggplot2)
+require(DT)
+require(bslib)
+require(shiny)
+require(bsicons)
+require(htmltools)
+require(readxl)
 
 carbon_data <- read.csv("www/carbon_data_clean.csv") %>%
   mutate(lineitem_code = factor(
