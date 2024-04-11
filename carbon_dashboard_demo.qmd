@@ -2,13 +2,14 @@
 title: "HAU Carbon"
 logo: "images/nl_agridat_hex_tp.png"
 format: dashboard
-date: 2024-03-12
+#server: shiny
 date-modified: 2024-03-27
 orientation: columns
 expandable: false
 theme: flatly_edited.scss
 embed-resources: true
 resources: "docs/HAcarbon_master_2022.xlsx"
+
 ---
 
 # Emissions Source
@@ -34,6 +35,8 @@ carbon_data <- read.csv("www/carbon_data_clean.csv") %>%
 data_dict <- read_xlsx("www/HAcarbon_master_2022.xlsx", sheet = 5)
 
 other_dict <- read_xlsx("www/HAcarbon_master_2022.xlsx", sheet = 6) 
+
+
 
 ## Theme ----  
 theme_m.rl <- theme(
@@ -933,13 +936,65 @@ datatable(carbon_data %>%
           filter = list(position = 'top', clear = FALSE),
           extensions = 'Buttons',
           options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel'))) %>%
+                         buttons = c('copy'))) %>%
   formatRound(columns = c(5:72), digits = 2, mark ="", dec.mark = ".")
 ```
 
+```{r}
+#| title: Data dictionary - variables
+
+datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy')))
+
+```
+
+```{r}
+#| title: Data dictionary - Other
+
+datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
+          extensions = 'Buttons',
+          options = list(dom = 'Bfrtip',
+                         buttons = c('copy')))
+
+```
+
+
 ## Column {width="30%"}
 
-### Row {.tabset }
+### Row {height="25%"}
+::: {.card title="Data download"}
+```{r}
+# ui <- fluidPage(
+#    downloadButton("download", "Download excel file")
+#  )
+# 
+# 
+# server <- function(input, output, session) {
+#   
+#   data <- list(carbon_data, data_dict, other_dict)
+#  
+#  output$download <- downloadHandler(
+#    filename = function() {
+#      paste0("HAcarbon", 
+#             #lastest_year, 
+#             ".xlsx")
+#    },
+#    content = function(file) {
+#      writexl::write_xlsx(data(), path = "HACarbon_2022", col_names = TRUE)
+#    }
+#  )
+# }
+# 
+# shinyApp(ui,server)
+
+```
+
+[Downlad excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2022.xlsx)
+:::
+
+### Row {.tabset height="75%"}
 
 ::: {.card title="Data source"}
 This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
@@ -955,43 +1010,6 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 :::
 
 
-```{r}
-#| title: Data dictionary - variables
-
-datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
-          extensions = 'Buttons',
-          options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel')))
-
-```
 
 
-```{r}
-#| title: Data dictionary - Other
-
-datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
-          extensions = 'Buttons',
-          options = list(dom = 'Bfrtip',
-                         buttons = c('copy', 'csv', 'excel')))
-
-```
-
-### Row
-::: {.card title="Data download"}
- ```{r}
-# ui <- fluidPage(
-#   downloadButton("download1"),
-#   downloadLink("download2")
-# )
-
-# output$download <- downloadHandler(
-#   filename = function() {
-#     paste0(input$dataset, ".xlsx")
-#   },
-#   content = function(file) {
-#     write.csv(data(), file)
-#   }
-# )
-```
-:::
 
