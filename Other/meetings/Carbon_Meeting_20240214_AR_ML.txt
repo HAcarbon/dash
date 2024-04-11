@@ -1,0 +1,31 @@
+Meeting date: 2024-02-14
+Attendance: Alice Rogers, Megan Lewis
+Topic: Addressing Ed Harris comments from email
+
+1. Maybe this dataset would be a good test case to use to set up a github for to learn/practise version control 
+
+		Github - work in progress - ML shall work on setting up 
+
+2. Still need to fix the a) source id and b) farm sum total for 2020 – also add explanation of this fix somewhere in the dictionary
+		a. Require clarification on what is meant by 'source id'
+		b. short-term solution - just use the summed data numbers for now due to time crunch? 
+					 - Or could exlcude for now until updated?
+
+3. The remark I made about inconsistent or missing information for some of the rows… 
+ 	Different people completed the reports so difficult to know exaclty what could be causing this issue
+	Rapeseed and feed wheat on pdf report output, but no data coming out for some crops etc in the results csv export despite being in the inputs - potential agrecalc issue
+			- Can we contact Agrecalc to ask what might have happened?
+			- Nothing on update section on site https://app.agrecalc.com/updates.php 
+			- requires further investigation
+
+4. As I look down the list of lineitem_code values, I see some thing I suspect are actually present in the farm operation (like field bean/field peas).  Am I missing something where this is accounted for elsewhere? Or is it possible a decision was made to do our best on the animal, machines, and grazing and the arable was less important and left off (thinking here of the Omnia data)? 
+		- If not included in carbon calcuation, it was done as these crops/line item codes were/are part of the trials and have no commercial value
+
+
+Other business: 
+- Do we have access to the results of the survey which asked students and lecturers the kind of data they would like to see?
+- Presently have a lot of data, so being able to specify specifically the data required would be helpful initially. 
+- Dairy cow fertility data - cow manager, uniform 
+	- need clarification on the actual data that is needed
+	- need to figure out the data format that data can be exported in
+		- can definitely be exported as a pdf - may need to scrape data if no other export function is available. 

@@ -1,0 +1,571 @@
+---
+title: "Carbon_dashboard_experimenting"
+format: dashboard
+server: shiny
+---
+
+```{r}
+#| context: setup
+
+library(tidyverse)
+library(knitr)
+library(rmarkdown)
+library(ggplot2)
+library(DT)
+library(bslib)
+library(shiny)
+library(bsicons)
+library(htmltools)
+
+ carbon_data <- read.csv("data/carbon_data_clean.csv") #%>% 
+#   mutate(lineitem_code = factor(lineitem_code, levels = c("DAIRY", "BEEF", "PIGS", "SHEEP", "WHOLE_FARM")))
+```
+
+# {.sidebar}
+
+```{r}
+selectInput('x', 'X', names(dataset))
+selectInput('y', 'Y', names(carbon_data), names(carbon_data)[[2]])
+selectInput('colour', 'Colour', c('None', names(carbon_data)))
+```
+
+```{r}
+selectInput('facet_row', 'Facet Row', c(None = '.', names(carbon_data[sapply(carbon_data, is.factor)])))
+selectInput('facet_col', 'Facet Column', c(None = '.', names(carbon_data[sapply(carbon_data, is.factor)])))
+```
+
+# Plot
+
+```{r}
+# plotOutput('plot')
+```
+
+# Data
+
+```{r}
+# tableOutput('data')
+```
+
+```{r}
+# #| context: server
+# 
+# output$plot <- renderPlot({
+#   
+#   p <-ggplot(
+#     dataset(),
+#     aes_string(x=input$x, y=input$y)) +
+#     geom_bar()
+#   
+#   if (input$colour != 'None')
+#     p <- p + aes_string(colour = input$colour)
+#   
+#   facets <- paste(input$facet_row, '~', input$facet_col)
+#   
+#   if (facets != 'None')
+#     p <- p + facet_grid(facets)
+#   
+#   p
+#   
+#   
+# })
+# 
+# 
+# output$data <- renderTable({
+#   dataset()
+# })
+# ```
+
+# Experimenting {#experimenting}
+
+
+## Column {width="40%"}
+```{r leaflet prep}
+library(leaflet)
+
+
+  office_icon = makeIcon("images/workplace.png","images/workplace.png", 50, 50)
+  dairy_icon = makeIcon("images/dairy.png", "images/dairy.png", 50, 50 )
+  robot_icon = makeIcon("images/robot.png","images/robot.png", 50, 50)
+  beef_icon = makeIcon("images/beef.png","images/beef.png", 50, 50)
+  sheep_icon = makeIcon("images/sheep.png","images/sheep.png", 50, 50)
+  pig_icon = makeIcon("images/pig.png","images/pig.png", 50, 50)
+  uni_icon = makeIcon("images/graduation-hat.png","images/graduation-hat.png",50,50)
+  
+  dairy_data <- carbon_data %>%
+    filter(lineitem_code == "DAIRY" & Year == latest_year) 
+  
+  
+ dairy_popup <- paste("<strong>Dairy Unit</strong>", "</br>", 
+                      "Year:", latest_year, "</br>",
+                      "Total CO<sub>2</sub>e :", my_comma(dairy_data$total_co2e_emissions_from_farming_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total direct carbon:", my_comma(dairy_data$co2_direct_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total indirect carbon:",my_comma(dairy_data$co2_indirect_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total methane:",my_comma(dairy_data$methane_total_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total nitrous oxide:", my_comma(dairy_data$nitrous_oxide_total_kgco2e/1000000), "Kt CO<sub>2</sub>e")
+ 
+ 
+   beef_data <- carbon_data %>%
+    filter(lineitem_code == "BEEF" & Year == latest_year) 
+  
+  
+ beef_popup <- paste("<strong>Beef Unit</strong>", "</br>", 
+                      "Year:", latest_year, "</br>",
+                      "Total CO<sub>2</sub>e :", my_comma(beef_data$total_co2e_emissions_from_farming_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total direct carbon:", my_comma(beef_data$co2_direct_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total indirect carbon:",my_comma(beef_data$co2_indirect_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total methane:",my_comma(beef_data$methane_total_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total nitrous oxide:", my_comma(beef_data$nitrous_oxide_total_kgco2e/1000000), "Kt CO<sub>2</sub>e")
+ 
+ sheep_data <- carbon_data %>%
+    filter(lineitem_code == "SHEEP" & Year == latest_year) 
+  
+  
+ sheep_popup <- paste("<strong>Sheep Unit</strong>", "</br>", 
+                      "Year:", latest_year, "</br>",
+                      "Total CO<sub>2</sub>e :", my_comma(sheep_data$total_co2e_emissions_from_farming_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total direct carbon:", my_comma(sheep_data$co2_direct_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total indirect carbon:",my_comma(sheep_data$co2_indirect_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total methane:",my_comma(sheep_data$methane_total_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total nitrous oxide:", my_comma(sheep_data$nitrous_oxide_total_kgco2e/1000000), "Kt CO<sub>2</sub>e")
+
+ pig_data <- carbon_data %>%
+    filter(lineitem_code == "PIGS" & Year == latest_year) 
+  
+  
+ pig_popup <- paste("<strong>Pig Unit</strong>", "</br>", 
+                      "Year:", latest_year, "</br>",
+                      "Total CO<sub>2</sub>e :", my_comma(pig_data$total_co2e_emissions_from_farming_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total direct carbon:", my_comma(pig_data$co2_direct_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total indirect carbon:",my_comma(pig_data$co2_indirect_co2_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total methane:",my_comma(pig_data$methane_total_kgco2e/1000000), "Kt CO<sub>2</sub>e", "</br>",
+   "Total nitrous oxide:", my_comma(pig_data$nitrous_oxide_total_kgco2e/1000000), "Kt CO<sub>2</sub>e")
+
+```
+
+```{r leaflet}
+ 
+leaflet(carbon_data) %>%
+  fitBounds(lng1 = -2.435130, lat1 = 52.779020, lng2 = -2.429167, lat2 = 52.781648 ) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=-2.427, lat=52.779, popup="Harper Adams University", icon = uni_icon) %>%
+  addMarkers(lng=-2.434319, lat=52.780052, popup=dairy_popup, icon = dairy_icon ) %>%
+  #addMarkers(lng=-2.432867, lat=52.780706, popup="Robot dairy unit", icon = robot_icon ) %>%
+  addMarkers(lng=-2.430173, lat=52.779969, popup=pig_popup, icon = pig_icon) %>%
+  addMarkers(lng=-2.430332, lat=52.780733, popup=sheep_popup, icon = sheep_icon) %>%
+  addMarkers(lng=-2.430499, lat=52.780594, popup=beef_popup, icon = beef_icon) %>%
+  addMarkers(lng=-2.432260, lat=52.779504, popup="Future Farm Office", icon =office_icon) %>%
+  addScaleBar(position = "bottomright") 
+
+
+```
+
+## Column {width= 60%}
+
+```{r}
+#| context: setup
+
+
+ c_data <-
+  carbon_data %>% 
+  select(c(results_id:total_co2e_emissions_from_farming_kgco2e)) %>%
+  pivot_longer(-c(results_id:lineitem_code), names_to = "variables", values_to = "values" ) %>%
+  select(-farm_area) %>%
+  mutate(
+     ghg_name_main = case_when(
+      str_detect(variables, "co2_dir_e") ~ "CO2",
+      str_detect(variables, "co2_direct") ~ "CO2",
+      str_detect(variables, "co2_dir_ind") ~ "CO2",
+      str_detect(variables, "co2_indirect") ~ "CO2",
+      str_detect(variables, "co2_total") ~ "CO2",
+      str_detect(variables, "methane_") ~ "Methane",
+      str_detect(variables, "nitrous_oxide_") ~ "Nitrous oxide",
+      str_detect(variables, "carbon_seq_") ~ "carbon seq",
+      str_detect(variables, "co2e_") ~ "co2e"
+    ),
+    ghg_name_detail = case_when(
+      str_detect(variables, "co2_dir_e") ~ "Direct CO2",
+      str_detect(variables, "co2_direct") ~ "Direct CO2",
+      str_detect(variables, "co2_dir_ind") ~ "Indirect CO2",
+      str_detect(variables, "co2_indirect") ~ "Indirect CO2",
+      str_detect(variables, "co2_total") ~ "Total CO2",
+      str_detect(variables, "methane_") ~ "Methane",
+      str_detect(variables, "nitrous_oxide_") ~ "Nitrous oxide",
+      str_detect(variables, "carbon_seq_") ~ "Carbon seq",
+      str_detect(variables, "co2e_") ~ "CO2e"
+    ),
+    ghg_summary = case_when(
+      str_detect(variables, "total") ~ "total",
+      str_detect(variables, "co2_direct") ~ "total",
+      str_detect(variables, "co2_indirect") ~ "total",
+     TRUE ~ "measure"
+    ))
+```
+### Row {.tabset}
+```{r}
+#| title: Direct carbon 
+
+
+# In theory I could get this to be interactive by replacing the filter bits with whatever is selected
+dir_pal <- c("darkorange", "orangered", "indianred4", "firebrick", "tan3" ) # dark orange
+
+  c_data %>% 
+    #filter(lineitem_code == "DAIRY") %>% # 
+    filter(lineitem_code != "WHOLE_FARM") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail == "Direct CO2") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+  scale_fill_manual(
+    labels = c("Diesel", "Electricity", "Other fuels", "Renewable \nelectricity", "Renewable \nheat"),
+    limits = c("co2_dir_emissions_diesel_kgco2e", "co2_dir_emissions_electricity_kgco2e", "co2_dir_emissions_other_fuels_kgco2e", "co2_dir_emissions_renewable_electricity_kgco2e", "co2_dir_emissions_renewable_heat_kgco2e"),
+    values = dir_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~lineitem_code)
+
+```
+
+```{r}
+#| title: Indirect carbon
+
+
+# In theory I could get this to be interactive by replacing the filter bits with whatever is selected
+
+indir_pal <- c("lightsalmon","orange","coral",  "chocolate1", "sienna3", "tomato3" ,"lightsalmon3", "orange3", "tomato",  "tan") # light orange
+
+
+  c_data %>% 
+    #filter(lineitem_code == "DAIRY") %>% # 
+    filter(lineitem_code != "WHOLE_FARM") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail == "Indirect CO2") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+    scale_fill_manual(
+    labels = c("Bedding", "Biochar", "Disposal of \ncarcasses", "Feed", "Fertiliser", "Lime", "Pesticides", "Refrigerant \nlosses", "Transport", "Waste"),
+    limits = c("co2_dir_ind_emissions_bedding_kgco2e", "co2_dir_ind_emissions_biochar_kgco2e", "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e", "co2_dir_ind_emissions_feed_kgco2e", "co2_dir_ind_emissions_fertiliser_kgco2e","co2_dir_ind_emissions_lime_kgco2e", "co2_dir_ind_emissions_pesticides_kgco2e", "co2_dir_ind_emissions_refrigerant_losses_kgco2e", "co2_dir_ind_emissions_transport_kgco2e", "co2_dir_ind_emissions_waste_kgco2e"),
+    values = indir_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~lineitem_code)
+
+```
+
+
+```{r}
+#| title: Methane
+
+
+# In theory I could get this to be interactive by replacing the filter bits with whatever is selected
+
+ch4_pal <-c("mediumorchid4","mediumorchid1") # purpleblue
+
+  c_data %>% 
+    #filter(lineitem_code == "DAIRY") %>% # 
+    filter(lineitem_code != "WHOLE_FARM") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail == "Methane") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+    scale_fill_manual(
+    labels = c("Fermentation, feed \n & digestion", "Manure management"),
+    limits = c("methane_enteric_fermentation_feed_digestion_kgco2e", "methane_enteric_manure_mgmt_kgco2e"),
+    values = ch4_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~lineitem_code)
+
+
+
+```
+
+```{r}
+#| title: Nitrous oxide
+
+
+n2o_pal <- c("maroon3","hotpink","lightpink") #pink purple
+
+
+  c_data %>% 
+    #filter(lineitem_code == "DAIRY") %>% # 
+    filter(lineitem_code != "WHOLE_FARM") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail == "Nitrous oxide") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+    scale_fill_manual(
+    labels = c("Inorganic and \nimported organic \nmanure", "Grazing manure \nmanagement", "Veg and crop \nN residues"),
+    limits = c("nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e", "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e", "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+    values = n2o_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~lineitem_code)
+
+
+
+```
+
+
+```{r}
+#| title: Dairy
+ 
+detail_ghg_pal <- c("darkorange", 
+                    "orangered",
+                    "indianred4", 
+                    "firebrick", 
+                    "tan3",# direct carbon
+                   # "lightsalmon",
+                    "orange",
+                    "coral",
+                    "chocolate1", 
+                    "sienna3",
+                    "tomato3" ,
+                    "lightsalmon3",
+                    "orange3",
+                    "tomato", 
+                    "tan", # indirect carbon light orange
+                    "mediumorchid4",
+                    "mediumorchid1", # methane purpleblue
+                    "maroon3",
+                    "hotpink",
+                    "lightpink") # n2o pink purple
+
+
+
+c_data %>% 
+       filter(lineitem_code == "DAIRY") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail != "Carbon seq") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+     scale_fill_manual(
+    labels = c("Diesel", 
+               "Electricity", 
+               "Other fuels",
+               "Renewable electricity",
+               "Renewable heat",
+               "Bedding", 
+               "Biochar", 
+               "Disposal of carcasses", 
+               "Feed", 
+               "Fertiliser", 
+               #"Lime", 
+               "Pesticides", 
+               "Refrigerant losses", 
+               "Transport", "Waste",
+               "Fermentation, feed & digestion",
+               "Manure management",
+               "Inorganic & imported organic manure",
+               "Grazing manure management", 
+               "Veg & crop N residues"),
+     limits = c("co2_dir_emissions_diesel_kgco2e", 
+                "co2_dir_emissions_electricity_kgco2e",
+                "co2_dir_emissions_other_fuels_kgco2e", 
+                "co2_dir_emissions_renewable_electricity_kgco2e",
+                "co2_dir_emissions_renewable_heat_kgco2e",
+                "co2_dir_ind_emissions_bedding_kgco2e",
+                "co2_dir_ind_emissions_biochar_kgco2e",
+                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
+                "co2_dir_ind_emissions_feed_kgco2e",
+                "co2_dir_ind_emissions_fertiliser_kgco2e",
+               #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_pesticides_kgco2e",
+                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
+                "co2_dir_ind_emissions_transport_kgco2e",
+                "co2_dir_ind_emissions_waste_kgco2e",
+                "methane_enteric_fermentation_feed_digestion_kgco2e",
+                "methane_enteric_manure_mgmt_kgco2e",
+                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
+                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
+                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+       values = detail_ghg_pal) +
+     ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~ghg_name_detail)
+
+```
+
+
+```{r}
+#| title: Beef
+c_data %>% 
+       filter(lineitem_code == "BEEF") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail != "Carbon seq") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+     scale_fill_manual(
+    labels = c("Diesel", 
+               "Electricity", 
+               "Other fuels",
+               "Renewable electricity",
+               "Renewable heat",
+               "Bedding", 
+               "Biochar", 
+               "Disposal of carcasses", 
+               "Feed", 
+               "Fertiliser", 
+               #"Lime", 
+               "Pesticides", 
+               "Refrigerant losses", 
+               "Transport", "Waste",
+               "Fermentation, feed & digestion",
+               "Manure management",
+               "Inorganic & imported organic manure",
+               "Grazing manure management", 
+               "Veg & crop N residues"),
+     limits = c("co2_dir_emissions_diesel_kgco2e", 
+                "co2_dir_emissions_electricity_kgco2e",
+                "co2_dir_emissions_other_fuels_kgco2e", 
+                "co2_dir_emissions_renewable_electricity_kgco2e",
+                "co2_dir_emissions_renewable_heat_kgco2e",
+                "co2_dir_ind_emissions_bedding_kgco2e",
+                "co2_dir_ind_emissions_biochar_kgco2e",
+                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
+                "co2_dir_ind_emissions_feed_kgco2e",
+                "co2_dir_ind_emissions_fertiliser_kgco2e",
+                #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_pesticides_kgco2e",
+                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
+                "co2_dir_ind_emissions_transport_kgco2e",
+                "co2_dir_ind_emissions_waste_kgco2e",
+                "methane_enteric_fermentation_feed_digestion_kgco2e",
+                "methane_enteric_manure_mgmt_kgco2e",
+                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
+                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
+                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+       values = detail_ghg_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~ghg_name_detail)
+
+
+```
+
+```{r}
+#| title: Sheep
+
+c_data %>% 
+       filter(lineitem_code == "SHEEP") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail != "Carbon seq") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+     scale_fill_manual(
+    labels = c("Diesel", 
+               "Electricity", 
+               "Other fuels",
+               "Renewable electricity",
+               "Renewable heat",
+               "Bedding", 
+               "Biochar", 
+               "Disposal of carcasses", 
+               "Feed", 
+               "Fertiliser", 
+               #"Lime", 
+               "Pesticides", 
+               "Refrigerant losses", 
+               "Transport", "Waste",
+               "Fermentation, feed & digestion",
+               "Manure management",
+               "Inorganic & imported organic manure",
+               "Grazing manure management", 
+               "Veg & crop N residues"),
+     limits = c("co2_dir_emissions_diesel_kgco2e", 
+                "co2_dir_emissions_electricity_kgco2e",
+                "co2_dir_emissions_other_fuels_kgco2e", 
+                "co2_dir_emissions_renewable_electricity_kgco2e",
+                "co2_dir_emissions_renewable_heat_kgco2e",
+                "co2_dir_ind_emissions_bedding_kgco2e",
+                "co2_dir_ind_emissions_biochar_kgco2e",
+                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
+                "co2_dir_ind_emissions_feed_kgco2e",
+                "co2_dir_ind_emissions_fertiliser_kgco2e",
+                #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_pesticides_kgco2e",
+                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
+                "co2_dir_ind_emissions_transport_kgco2e",
+                "co2_dir_ind_emissions_waste_kgco2e",
+                "methane_enteric_fermentation_feed_digestion_kgco2e",
+                "methane_enteric_manure_mgmt_kgco2e",
+                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
+                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
+                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+       values = detail_ghg_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~ghg_name_detail)
+
+```
+
+```{r}
+#| title: Pigs
+
+c_data %>% 
+       filter(lineitem_code == "PIGS") %>%
+    filter(ghg_summary == "measure") %>% 
+    filter(ghg_name_detail != "Carbon seq") %>% 
+    ggplot(aes(x = Year, y = values/1000000, fill = variables)) +
+    geom_bar(position = "stack", stat = "identity") +
+     scale_fill_manual(
+    labels = c("Diesel", 
+               "Electricity", 
+               "Other fuels",
+               "Renewable electricity",
+               "Renewable heat",
+               "Bedding", 
+               "Biochar", 
+               "Disposal of carcasses", 
+               "Feed", 
+               "Fertiliser", 
+               #"Lime", 
+               "Pesticides", 
+               "Refrigerant losses", 
+               "Transport", "Waste",
+               "Fermentation, feed & digestion",
+               "Manure management",
+               "Inorganic & imported organic manure",
+               "Grazing manure management", 
+               "Veg & crop N residues"),
+     limits = c("co2_dir_emissions_diesel_kgco2e", 
+                "co2_dir_emissions_electricity_kgco2e",
+                "co2_dir_emissions_other_fuels_kgco2e", 
+                "co2_dir_emissions_renewable_electricity_kgco2e",
+                "co2_dir_emissions_renewable_heat_kgco2e",
+                "co2_dir_ind_emissions_bedding_kgco2e",
+                "co2_dir_ind_emissions_biochar_kgco2e",
+                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
+                "co2_dir_ind_emissions_feed_kgco2e",
+                "co2_dir_ind_emissions_fertiliser_kgco2e",
+                #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_pesticides_kgco2e",
+                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
+                "co2_dir_ind_emissions_transport_kgco2e",
+                "co2_dir_ind_emissions_waste_kgco2e",
+                "methane_enteric_fermentation_feed_digestion_kgco2e",
+                "methane_enteric_manure_mgmt_kgco2e",
+                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
+                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
+                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+       values = detail_ghg_pal) +
+    ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
+    labs( x = "Year", fill = "Emissions source")+
+    facet_wrap(~ghg_name_detail)
+
+```
+
+```{r Total co2e produced in 2022 value boxa}
+bslib::value_box(
+  title = h1(HTML("Total CO<sub>2</sub>e ")),
+  value = my_comma(tot_co2e_current),
+  p(HTML("Kt CO<sub>2</sub>e")),
+  theme = "warning"
+  )
+```
+
+
+**Cleaned data** (data used here) :: [carbon_data_clean.csv](data/carbon_data_clean.csv)
+
+**Raw data** :: [carbon_data.csv](data/carbon_data.csv)
+
+**Carbon data excel file** inc. data dictionary :: [Carbon_data_agrecalc_v02.xlsx](data/Carbon_data_agrecalc_v02.xlsx)

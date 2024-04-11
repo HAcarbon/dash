@@ -1,0 +1,29 @@
+HAU CARBON DATA 2022 NOTES
+
+Land & Crops:
+Data obtained from Omnia and Crops & Ops Sector manager master spreadsheet - determined the crops in the ground from 01/01/2022 till 31/12/2022
+Will use Summit to calculate the field applications of fertiliser and chemical sprays
+Spray applications are based on field size
+Used field area from Omnia application for consistency of data as there are too many variables from the sector managers master spreadsheet
+Fertiliser usage and rates calculated from Summit - information missing from Summit for some crops - information is as accurate as it can be without further investigation
+Excluded spring barley fields as these were grown for HFF
+According to sector manager no hay was produced in year 2022, previously identified hay fields have been moved to pasture grazing fields
+Barley and wheat straw produced on the farm has been transferred as bedding to the sheep and dairy enterprise, figure for the purchased bedding for the dairy is the amount remaining that needed to be purchased once the home grown straw was deducted from the calculation
+An addition of 702 metres of hedges were planted in 2022, along with a strip of fruit trees equalling to 490 metres (the fruit trees have been classed under the Broadleaved woodland section of the calculator)
+
+
+Livestock:
+Data for pigs is based on previous data from 2021 - no significant change has occurred - all data has been checked by the pig Sector Manager
+Data for sheep weights are the same values from 2021 - the flock has not changed - all data has been checked by the ruminant Sector manager - all other figures required for the calculation has been provided by the shepherd
+Sheep feed also includes 3t of lamb creep and 40t of haylage, but options for that feed is not present on the feed tabs
+The dairy's purchased feed includes the Y/S diet and the robotic milking herd's diet
+Calculated the figures for DLW for dairy heifers using the master spreadsheet given to me by the young stock deputy manager as well as the figures provided by the ruminant sector manager - no DLW data is recorded/available for the dairy steers 0-12 mnths
+
+
+Energy & Waste:
+Data for petrol, kerosene and coal was determined from the previous carbon calculation in 2021
+Data for LPG was adjusted to zero this year after confirmation it was not used in 2022
+Allocated the red diesel and white diesel data across all sections (apart from rough grazing and biodiversity categories) of crops equally as difficult to determine the exact location of use
+Calculated the litres of white diesel used for the transportation of pigs to the abattoirs - used an average mpg of 7.9 to help with calculating litres of fuel used in transportation
+Waste plastic data is based on the figure from the previous carbon calculation in 2021 - will remain the same value until an accurate record of waste can be calculated - allocation of waste value is an approximation of waste plastic produced from the enterprises due to size, stocking numbers and purchased feed quantities
+Electricity and water data was found from the estates department software called Delta controls
