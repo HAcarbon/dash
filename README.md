@@ -6,15 +6,5 @@ As part of the sustainable goals, the Future Farm aims to be **'net-zero'** for 
 Data was collated from a range of software and systems across the Future Farm. This data was collated and inputted into the Agrecalc Farm Carbon Calculator. Separate reports and '.csv' results were calculated and exported for 2020, 2021 and 2022. This is the beginning of annual carbon data collection to allow for comparisions and tracking of carbon emissions (CO<sub>2</sub>e/kg) from the commercial farm operations. Results were formatted into a tidy format before being combined into a single dataframe. 
 ***
 
-### Table of contents
-* Data dictionary - See docs folder   
-* Meeting notes - See meetings folder
-
-*** 
-##### *Other things to add?*
-* limitations, challenges   
-* intended use   
-* credits and reference
-
-------------------------------
+-----------------------------
 *This data repository is managed by the Harper Adams University Environmental Sustainability Farm Data Group.* 
