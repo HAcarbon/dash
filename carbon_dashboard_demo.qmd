@@ -199,7 +199,7 @@ bslib::value_box(
 library(leaflet)
 
 
-  office_icon = makeIcon("images/workplace.png","images/workplace.png", 50, 50)
+  office_icon = makeIcon("images/nl_agridat_hex_tp.png","images/nl_agridat_hex_tp.png", 50, 50)
   dairy_icon = makeIcon("images/dairy.png", "images/dairy.png", 50, 50 )
   robot_icon = makeIcon("images/robot.png","images/robot.png", 50, 50)
   beef_icon = makeIcon("images/beef.png","images/beef.png", 50, 50)
@@ -270,7 +270,7 @@ leaflet(carbon_data) %>%
   addMarkers(lng=-2.430173, lat=52.779969, popup=pig_popup, icon = pig_icon) %>%
   addMarkers(lng=-2.430597, lat=52.780818, popup=sheep_popup, icon = sheep_icon) %>%
   addMarkers(lng=-2.430253, lat=52.780475, popup=beef_popup, icon = beef_icon) %>%
-  addMarkers(lng=-2.432260, lat=52.779504, popup ="Future Farm Office ", icon =office_icon) %>%
+  addMarkers(lng=-2.432260, lat=52.779504, popup ="Click the animal icons for info!", icon =office_icon) %>%
   # addMarkers(lng = -2.433879, lat = 52.780927, label = "Click on an icon for summary information", labelOptions = labelOptions(noHide = T)) %>%
   addScaleBar(position = "bottomright") 
  
@@ -732,9 +732,9 @@ leaflet(carbon_data) %>%
   addMarkers(lng=-2.434319, lat=52.780052, popup=dairy_popup, icon = dairy_icon ) %>%
   #addMarkers(lng=-2.432867, lat=52.780706, popup="Robot dairy unit", icon = robot_icon ) %>%
   addMarkers(lng=-2.430173, lat=52.779969, popup=pig_popup, icon = pig_icon) %>%
-  addMarkers(lng=-2.430332, lat=52.780733, popup=sheep_popup, icon = sheep_icon) %>%
+  addMarkers(lng=-2.430597, lat=52.780818,, popup=sheep_popup, icon = sheep_icon) %>%
   addMarkers(lng=-2.430499, lat=52.780594, popup=beef_popup, icon = beef_icon) %>%
-  addMarkers(lng=-2.432260, lat=52.779504, popup="Future Farm Office", icon =office_icon) %>%
+  addMarkers(lng=-2.432260, lat=52.779504, popup="Click here to view info", icon =office_icon) %>%
     # addMarkers(lng = -2.433879, lat = 52.780927, label = "Click on an icon for summary information", labelOptions = labelOptions(noHide = T)) %>%
   addScaleBar(position = "bottomright") 
 
@@ -951,7 +951,7 @@ datatable(data_dict, filter = list(position = 'topleft', clear = FALSE),
 ```
 
 ```{r}
-#| title: Data dictionary - Other
+#| title: Data dictionary - LineItem code
 
 datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
           extensions = 'Buttons',
@@ -999,14 +999,14 @@ datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
 ::: {.card title="Data source"}
 This data comprise the output results from the [AgreCalc Farm Carbon Calculator](https://www.agrecalc.com/) for the years 2020 through to 2022. Input data was collated from across the farm for each year.
 
-[**Disclaimer**]{.underline}**:** Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
+**Comments** 
+- Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
-**N.B.** Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
+- Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
 
-**Disclaimer:**
--   Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
+- Data were inputted by different staff members across each year and during this time updates have also been made to the Agrecalc calculator. Therefore, it is important to note that data may not be directly comparable. Updates will be made to address this issue.
 
--   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
+- The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
 :::
 
 
