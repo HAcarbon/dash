@@ -1,5 +1,9 @@
 # data wrangling
 
+# carbon_data <- carbon_data %>% 
+#   filter(lineitem_code == "WHOLE_FARM" | lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code =="SHEEP" | lineitem_code == "PIGS")
+
+
 my_comma <-
   scales::label_comma(accuracy = .1,
                       big.mark = ",",
@@ -8,15 +12,15 @@ my_comma <-
 
 ### creating summary stats
 
-latest_year <- max(carbon_data$Year)
+latest_year <- max(carbon_data$year)
 previous_year = latest_year - 1
 s_cur_year <- latest_year-2000
 s_prev_year <- previous_year - 2000
 
 current_net_co2e <- as.numeric(as.list(
   carbon_data %>%
-    filter(lineitem_code == "WHOLE_FARM" & Year == latest_year) %>%
-    select(Year, lineitem_code, net_emissions_from_land_use) %>%
+    filter(lineitem_code == "WHOLE_FARM" & year == latest_year) %>%
+    select(year, lineitem_code, net_emissions_from_land_use) %>%
     select(net_emissions_from_land_use)
 )[[1]]) / 1000000
 
@@ -27,12 +31,12 @@ tot_co2e_current <-
     as.list(
       carbon_data %>%
         filter(lineitem_code == "WHOLE_FARM") %>%
-        select(Year, total_co2e_emissions_from_farming_kgco2e) %>%
-        group_by(Year) %>%
+        select(year, total_co2e_emissions_from_farming_kgco2e) %>%
+        group_by(year) %>%
         summarise(total_co2e = sum(
           total_co2e_emissions_from_farming_kgco2e
         )) %>%
-        filter(Year == latest_year) %>%
+        filter(year == latest_year) %>%
         select(total_co2e)
     )[[1]]
   ) / 1000000
@@ -42,12 +46,12 @@ tot_co2e_prev <-
     as.list(
       carbon_data %>%
         filter(lineitem_code == "WHOLE_FARM") %>%
-        select(Year, total_co2e_emissions_from_farming_kgco2e) %>%
-        group_by(Year) %>%
+        select(year, total_co2e_emissions_from_farming_kgco2e) %>%
+        group_by(year) %>%
         summarise(total_co2e = sum(
           total_co2e_emissions_from_farming_kgco2e
         )) %>%
-        filter(Year == previous_year) %>%
+        filter(year == previous_year) %>%
         select(total_co2e)
     )[[1]]
   ) / 1000000
@@ -57,13 +61,13 @@ tot_co2e_20 <-
     as.list(
       carbon_data %>%
         filter(lineitem_code == "WHOLE_FARM") %>%
-        select(Year, total_co2e_emissions_from_farming_kgco2e) %>%
+        select(year, total_co2e_emissions_from_farming_kgco2e) %>%
         
-        group_by(Year) %>%
+        group_by(year) %>%
         summarise(total_co2e = sum(
           total_co2e_emissions_from_farming_kgco2e
         )) %>%
-        filter(Year == "2020") %>%
+        filter(year == "2020") %>%
         select(total_co2e)
     )[[1]]
   ) / 1000000
@@ -75,13 +79,13 @@ an_seq_forest_hedge_current <-
   as.numeric(as.list(
     carbon_data %>%
       filter(lineitem_code == "WHOLE_FARM") %>%
-      group_by(Year) %>%
+      group_by(year) %>%
       summarise(
         tot_forest = sum(sequestration_by_forestry),
         tot_hedge = sum(sequestration_by_hedges),
         tot_seq = tot_forest + tot_hedge
       ) %>%
-      filter(Year == latest_year) %>%
+      filter(year == latest_year) %>%
       select(tot_seq)
   )[[1]]) / 1000000
 

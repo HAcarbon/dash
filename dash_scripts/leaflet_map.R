@@ -10,7 +10,7 @@ pig_icon = makeIcon("images/pig.png","images/pig.png", 50, 50)
 uni_icon = makeIcon("images/graduation-hat.png","images/graduation-hat.png",50,50)
 
 dairy_data <- carbon_data %>%
-  filter(lineitem_code == "DAIRY" & Year == latest_year) 
+  filter(lineitem_code == "DAIRY" & year == latest_year) 
 
 
 dairy_popup <- paste("<strong>Dairy Unit</strong>", "</br>", 
@@ -23,7 +23,7 @@ dairy_popup <- paste("<strong>Dairy Unit</strong>", "</br>",
 
 
 beef_data <- carbon_data %>%
-  filter(lineitem_code == "BEEF" & Year == latest_year) 
+  filter(lineitem_code == "BEEF" & year == latest_year) 
 
 
 beef_popup <- paste("<strong>Beef Unit</strong>", "</br>", 
@@ -35,7 +35,7 @@ beef_popup <- paste("<strong>Beef Unit</strong>", "</br>",
                     "Total nitrous oxide:", my_comma(beef_data$nitrous_oxide_total_kgco2e/1000), "t CO<sub>2</sub>e")
 
 sheep_data <- carbon_data %>%
-  filter(lineitem_code == "SHEEP" & Year == latest_year) 
+  filter(lineitem_code == "SHEEP" & year == latest_year) 
 
 
 sheep_popup <- paste("<strong>Sheep Unit</strong>", "</br>", 
@@ -47,7 +47,7 @@ sheep_popup <- paste("<strong>Sheep Unit</strong>", "</br>",
                      "Total nitrous oxide:", my_comma(sheep_data$nitrous_oxide_total_kgco2e/1000), "t CO<sub>2</sub>e")
 
 pig_data <- carbon_data %>%
-  filter(lineitem_code == "PIGS" & Year == latest_year) 
+  filter(lineitem_code == "PIGS" & year == latest_year) 
 
 
 pig_popup <- paste("<strong>Pig Unit</strong>", "</br>", 
