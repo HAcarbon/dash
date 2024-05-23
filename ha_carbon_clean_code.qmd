@@ -8,7 +8,7 @@ orientation: columns
 expandable: false
 theme: flatly_edited.scss
 embed-resources: true
-resources: "docs/HAcarbon_master_2022.xlsx"
+resources: "docs/HAcarbon_master_2023.xlsx"
 ---
 
 ```{r Dashboard set up, echo=FALSE}
@@ -80,7 +80,7 @@ filter(ghg_type == "direct" | ghg_type == "indirect" | ghg_type == "methane" | g
   # group_by(year, ghg_type) %>%
   # summarise(emission = (sum(values))/1000) %>% 
 mutate(emission = values/1000000) %>% 
-  ggplot(aes(x = year, y = emission, fill = ghg_type))+
+  ggplot(aes(x = as.factor(year), y = emission, fill = ghg_type))+
   geom_bar(position = "stack", stat = "identity") +
   scale_fill_manual(
     labels = c("Direct carbon", "Indirect carbon", "Methane", "Nitrous oxide"),
@@ -282,7 +282,7 @@ c_data %>%
                "Disposal of carcasses", 
                "Feed", 
                "Fertiliser", 
-               #"Lime", 
+               "Lime", 
                "Pesticides", 
                "Refrigerant losses", 
                "Transport", "Waste",
@@ -301,7 +301,7 @@ c_data %>%
                 "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
                 "co2_dir_ind_emissions_feed_kgco2e",
                 "co2_dir_ind_emissions_fertiliser_kgco2e",
-               #"co2_dir_ind_emissions_lime_kgco2e",
+               "co2_dir_ind_emissions_lime_kgco2e",
                 "co2_dir_ind_emissions_pesticides_kgco2e",
                 "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
                 "co2_dir_ind_emissions_transport_kgco2e",
@@ -340,7 +340,7 @@ c_data %>%
                "Disposal of carcasses", 
                "Feed", 
                "Fertiliser", 
-               #"Lime", 
+               "Lime", 
                "Pesticides", 
                "Refrigerant losses", 
                "Transport", "Waste",
@@ -359,7 +359,7 @@ c_data %>%
                 "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
                 "co2_dir_ind_emissions_feed_kgco2e",
                 "co2_dir_ind_emissions_fertiliser_kgco2e",
-                #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_lime_kgco2e",
                 "co2_dir_ind_emissions_pesticides_kgco2e",
                 "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
                 "co2_dir_ind_emissions_transport_kgco2e",
@@ -400,7 +400,7 @@ c_data %>%
                "Disposal of carcasses", 
                "Feed", 
                "Fertiliser", 
-               #"Lime", 
+               "Lime", 
                "Pesticides", 
                "Refrigerant losses", 
                "Transport", "Waste",
@@ -419,7 +419,7 @@ c_data %>%
                 "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
                 "co2_dir_ind_emissions_feed_kgco2e",
                 "co2_dir_ind_emissions_fertiliser_kgco2e",
-                #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_lime_kgco2e",
                 "co2_dir_ind_emissions_pesticides_kgco2e",
                 "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
                 "co2_dir_ind_emissions_transport_kgco2e",
@@ -459,7 +459,7 @@ c_data %>%
                "Disposal of carcasses", 
                "Feed", 
                "Fertiliser", 
-               #"Lime", 
+               "Lime", 
                "Pesticides", 
                "Refrigerant losses", 
                "Transport", "Waste",
@@ -478,7 +478,7 @@ c_data %>%
                 "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
                 "co2_dir_ind_emissions_feed_kgco2e",
                 "co2_dir_ind_emissions_fertiliser_kgco2e",
-                #"co2_dir_ind_emissions_lime_kgco2e",
+                "co2_dir_ind_emissions_lime_kgco2e",
                 "co2_dir_ind_emissions_pesticides_kgco2e",
                 "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
                 "co2_dir_ind_emissions_transport_kgco2e",
@@ -540,7 +540,7 @@ datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
 ### Row {height="25%"}
 
 ::: {.card title="Download the data"}
-[Download excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2023.xlsx)
+[Download carbon data excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2023.xlsx)
 :::
 
 ### Row {.tabset height="75%"}

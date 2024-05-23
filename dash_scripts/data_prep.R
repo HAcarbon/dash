@@ -1,7 +1,7 @@
 # data wrangling
 
-# carbon_data <- carbon_data %>% 
-#   filter(lineitem_code == "WHOLE_FARM" | lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code =="SHEEP" | lineitem_code == "PIGS")
+ carbon_data <- carbon_data %>% 
+   filter(lineitem_code == "WHOLE_FARM" | lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code =="SHEEP" | lineitem_code == "PIGS")
 
 
 my_comma <-
