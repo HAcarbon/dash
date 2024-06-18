@@ -1,7 +1,12 @@
 # data wrangling
 
- carbon_data <- carbon_data %>% 
-   filter(lineitem_code == "WHOLE_FARM" | lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code =="SHEEP" | lineitem_code == "PIGS")
+ carbon_data <- carbon_data_master %>% 
+   mutate(data = rowMeans(carbon_data_master[,6:73])) %>% 
+   mutate(data = case_when(data >0 ~ "Y",
+                           TRUE ~ "N")) %>%
+   mutate(across(c(data), ~as.factor(.x))) %>% 
+   filter(data == "Y") %>%
+   select(-data)
 
 
 my_comma <-
@@ -89,9 +94,21 @@ an_seq_forest_hedge_current <-
       select(tot_seq)
   )[[1]]) / 1000000
 
+### net emission per kg output 
 
+latest_net_per_kg <- as.numeric(as.list(carbon_data %>% 
+  filter(lineitem_code=="WHOLE_FARM") %>% 
+  select(year, emissions_per_unit_of_output_kgco2e_kg_output) %>% 
+  filter(year == latest_year) %>%
+  select(emissions_per_unit_of_output_kgco2e_kg_output) ))
 
+prev_net_per_kg <- as.numeric(as.list(carbon_data %>% 
+                                          filter(lineitem_code=="WHOLE_FARM") %>% 
+                                          select(year, emissions_per_unit_of_output_kgco2e_kg_output) %>% 
+                                          filter(year == previous_year) %>%
+                                          select(emissions_per_unit_of_output_kgco2e_kg_output) ))
 
+net_per_kg_reduction <- latest_net_per_kg-prev_net_per_kg
 
 ### detailed GHG data prep
 
@@ -129,3 +146,84 @@ c_data <-
       str_detect(variables, "co2_indirect") ~ "total",
       TRUE ~ "measure"
     ))
+
+
+### --- source data
+
+tot_thermo_current <- 
+  as.numeric(
+    as.list(
+      source_type_data %>%
+        filter(lineitem_code == "WHOLE_FARM") %>% 
+        filter(contribution == "Total") %>% 
+        filter(source_type == "Thermogenic") %>% 
+        select(year, co2e_kg) %>% 
+        group_by(year) %>% 
+        summarise(total_co2e_kg = sum(co2e_kg)) %>% 
+        filter(year == latest_year) %>%
+        select(total_co2e_kg)
+    )[[1]]
+  ) / 1000000
+
+tot_bio_current <-
+  as.numeric(
+    as.list(
+      source_type_data %>%
+        filter(lineitem_code == "WHOLE_FARM") %>% 
+        filter(contribution == "Total") %>% 
+        filter(source_type == "Biogenic") %>% 
+        select(year, co2e_kg) %>% 
+        group_by(year) %>% 
+        summarise(total_co2e_kg = sum(co2e_kg)) %>% 
+        filter(year == latest_year) %>%
+        select(total_co2e_kg) 
+    )[[1]]
+  ) / 1000000
+  
+tot_other_current <-
+  as.numeric(
+    as.list(
+      source_type_data %>%
+        filter(lineitem_code == "WHOLE_FARM") %>% 
+        filter(contribution == "Total") %>% 
+        filter(source_type == "Combination") %>% 
+        select(year, co2e_kg) %>% 
+        group_by(year) %>% 
+        summarise(total_co2e_kg = sum(co2e_kg)) %>% 
+        filter(year == latest_year) %>%
+        select(total_co2e_kg) 
+    )[[1]]
+  ) / 1000000
+
+source_data_wf <- source_type_data %>%
+  filter(lineitem_code == 'WHOLE_FARM') %>% 
+  filter(contribution == 'Total') %>% 
+  mutate(co2e_kT = co2e_kg/1000000) %>%
+  group_by(year,source_type) %>%
+  summarise(
+    co2e_kT_type_tot = sum(co2e_kT)
+  ) %>% 
+  ungroup() %>%
+  group_by(year) %>%
+  mutate(co2e_kt_tot = sum(co2e_kT_type_tot)) %>%
+  ungroup() %>%
+  mutate(prop_contrib = co2e_kT_type_tot/co2e_kt_tot,
+         percent_contri = prop_contrib*100) 
+
+source_data_sector <- 
+  source_type_data %>%
+  filter(lineitem_code != "WHOLE_FARM") %>%
+  filter(contribution == 'Total') %>%  
+  mutate(co2e_kT = co2e_kg/1000000) %>% 
+    group_by(year,  lineitem_code, source_type,) %>%
+    summarise(
+      co2e_kt_sect = sum(co2e_kT),
+      ) %>% 
+    ungroup() %>%
+    group_by(year, lineitem_code) %>%
+    mutate(sect_tot = sum(co2e_kt_sect),
+           sect_prop = co2e_kt_sect/sect_tot) %>% 
+    ungroup() %>%
+    group_by(year, source_type) %>%
+    mutate(source_tot = sum(co2e_kt_sect),
+           sourc_prop = co2e_kt_sect/source_tot) %>% view()

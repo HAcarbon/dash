@@ -24,30 +24,32 @@ source("master_scripts.R")
 
 ### Row {title="summaryboxes" height="25%"}
 
-```{r Total co2e produced in 2022 value boxa}
-bslib::value_box(
-  title = h1(HTML("Total CO<sub>2</sub>e<br>"),latest_year),
-  value = my_comma(tot_co2e_current),
-  p(HTML("Kt CO<sub>2</sub>e")),
-  theme = "warning"
-  )
-```
 
 ```{r net emissions in 2022 value boxa}
 bslib::value_box(
   title = h1(HTML("Net emissions<br>"),latest_year),
   value = my_comma(current_net_co2e),
    p(HTML("Kt CO<sub>2</sub>e")),
-  theme = "info"
+  theme = "warning"
   )
 
 ```
 
 ```{r net emissions reduction 21-22 value boxa}
 bslib::value_box(
-  title = h1(HTML("Net emission reduction <br>", s_prev_year, "/", s_cur_year )),
-  value = my_comma(carbon_reduction_current_previous),
+  title = h1(HTML("Net emission/kg output <br>", latest_year )),
+  value = my_comma(latest_net_per_kg),
   p(HTML("Kt CO<sub>2</sub>e")),
+  theme = "info"
+  )
+
+```
+
+```{r net emissions reduction per kg}
+bslib::value_box(
+  title = h1(HTML("Net emissions/kg output reduction <br>", s_prev_year, "/", s_cur_year )),
+  value = my_comma(net_per_kg_reduction),
+  p(HTML("Kg CO<sub>2</sub>e/kg")),
   theme = "success"
   )
 
@@ -92,7 +94,7 @@ mutate(emission = values/1000000) %>%
        x = "Year", 
        fill = "GHG type") + 
   theme_bw() +
-  theme_m.rl
+  theme_m.tl
   
 ```
 
@@ -107,15 +109,15 @@ carbon_data %>%
 ggplot( aes(x = as.factor(year), y = carbon_equiv_tot, fill = lineitem_code)) +
    geom_bar(position="stack", stat="identity") +
     scale_fill_manual(
-    labels = c("Dairy", "Beef", "Pigs", "Sheep"),
-    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP"),
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
     values = sector_pal) +
   ylab(bquote(atop(bold(.(Total~Carbon~Equivalent~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
   labs(
     x = "Year",
     fill = "Sector") + 
   theme_bw()+
-  theme_m.rl
+  theme_m.tl
 ```
 
 
@@ -129,8 +131,8 @@ carbon_data %>%
 ggplot( aes(x = as.factor(year), y = direct_carbon_tot, fill = lineitem_code)) +
   geom_bar(position="stack", stat="identity") +
     scale_fill_manual(
-    labels = c("Dairy", "Beef", "Pigs", "Sheep"),
-    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP"),
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
     values = sector_pal) +
   ylab(bquote(atop(bold(.(Direct~Carbon~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
   # ylab(bquote(atop("Direct Carbon Emissions ", "(tonnes"~CO[2]~"e)"))) +
@@ -138,7 +140,7 @@ ggplot( aes(x = as.factor(year), y = direct_carbon_tot, fill = lineitem_code)) +
        x = "Year",
        fill = "Sector") + 
   theme_bw()+
-  theme_m.rl
+  theme_m.tl
 ```
 
 ```{r indirect carbon graph}
@@ -152,8 +154,8 @@ carbon_data %>%
 ggplot( aes(x = as.factor(year), y = indirect_carbon_tot, fill = lineitem_code)) +
    geom_bar(position="stack", stat="identity") +
     scale_fill_manual(
-    labels = c("Dairy", "Beef", "Pigs", "Sheep"),
-    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP"),
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
     values = sector_pal) +
   # ylab(bquote(atop("Indirect Carbon Emissions ", "(tonnes"~CO[2]~"e)"))) +
   ylab(bquote(atop(bold(.(Indirect~Carbon~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
@@ -161,7 +163,7 @@ ggplot( aes(x = as.factor(year), y = indirect_carbon_tot, fill = lineitem_code))
         x = "Year",
         fill = "Sector") + 
   theme_bw()+
-  theme_m.rl
+  theme_m.tl
 ```
 
 ```{r methane graph}
@@ -175,8 +177,8 @@ carbon_data %>%
 ggplot( aes(x = as.factor(year), y = methane, fill = lineitem_code)) +
    geom_bar(position="stack", stat="identity") +
     scale_fill_manual(
-    labels = c("Dairy", "Beef", "Pigs", "Sheep"),
-    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP"),
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
     values = sector_pal) +
   # ylab(bquote(atop("Methane Emissions ", "(tonnes"~CO[2]~"e)"))) +
   ylab(bquote(atop(bold(.(Methane~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
@@ -184,7 +186,7 @@ ggplot( aes(x = as.factor(year), y = methane, fill = lineitem_code)) +
         x = "Year",  
         fill = "Sector") + 
   theme_bw()+
-  theme_m.rl
+  theme_m.tl
 ```
 
 ```{r nitrous oxide graph}
@@ -197,8 +199,8 @@ carbon_data %>%
 ggplot( aes(x = as.factor(year), y = nitrous_oxide, fill = lineitem_code)) +
    geom_bar(position="stack", stat="identity") +
     scale_fill_manual(
-    labels = c("Dairy", "Beef", "Pigs", "Sheep"),
-    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP"),
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
     values = sector_pal) +
     # ylab(bquote(atop("Nitrous Oxide Emissions ", "(tonnes"~CO[2]~"e)"))) +
   ylab(bquote(atop(bold(.(Nitrous~Oxide~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
@@ -206,15 +208,145 @@ ggplot( aes(x = as.factor(year), y = nitrous_oxide, fill = lineitem_code)) +
        x = "Year", 
        fill = "Sector") + 
   theme_bw() +
-  theme_m.rl
+  theme_m.tl
 
 
 ```
 
 
+# Biogenic & Themorgenic Emissions
+
+## Column {width="40%"}
+
+### Row {height="25%"}
+
+```{r }
+bslib::value_box(
+  title = h1(HTML("Total thermogenic emissons"),latest_year),
+  value = my_comma(tot_thermo_current),
+  p(HTML("Kt CO<sub>2</sub>e")),
+  theme = "warning"
+  )
+```
+
+```{r }
+bslib::value_box(
+  title = h1(HTML("Total biogenic emissons"),latest_year),
+  value = my_comma(tot_bio_current),
+  p(HTML("Kt CO<sub>2</sub>e")),
+  theme = "info"
+  )
+
+```
+
+```{r }
+bslib::value_box(
+  title = h1(HTML("Total other emissons"),latest_year),
+  value = my_comma(tot_other_current),
+  p(HTML("Kt CO<sub>2</sub>e")),
+  theme = "success"
+  )
+
+```
+
+### Row {height="75%"}
+
+```{r leaflet b}
+
+ carbon_map
+
+```
+
+## Column {.tabset width="60%"}
+```{r total contribution whole farm}
+#| title: Total by Source type
+#| fig-cap: The total annual kilotonnes of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023 grouped by emisson source type. Colours indicate the contribution of each source type to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+
+source_data_wf %>% 
+  ggplot(aes(x=as.factor(year), y = co2e_kT_type_tot, fill = source_type)) +
+  geom_bar(stat="identity", position = "stack") +
+      scale_fill_manual(
+    labels = emission_source_labels,
+    limits = emission_source_limits,
+    values = emission_source_pal) +
+  ylab(bquote(atop(bold(.(Carbon~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
+  labs(
+       x = "Year", 
+       fill = "Emission source type",
+       colour ="Emission source type") + 
+  theme_bw() +
+  theme_m.tl
 
 
-# Sector Emission Sources
+```
+
+
+```{r percent contribution whole farm}
+#| title: Proportion by Source Type
+#| fig-cap: The proportion of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023 grouped by emisson source type. Colours indicate the contribution of each source type to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+
+source_data_wf %>% 
+  ggplot(aes(x=as.factor(year), y = prop_contrib, fill = source_type)) +
+  geom_bar(stat="identity", position = "stack") +
+      scale_fill_manual(
+    labels = emission_source_labels,
+    limits = emission_source_limits,
+    values = emission_source_pal) +
+  ylab(bquote(atop(bold(.(Proportion~of~carbon~emissions)), (bold(.(Kt~CO[2]~e)))))) +
+  labs(
+       x = "Year", 
+       fill = "Emission source type",
+       colour ="Emission source type") + 
+  theme_bw() +
+  theme_m.tl
+
+```
+
+
+```{r thermo per sector (bio and thermo)}
+#| title: Thermogenic by Sector
+#| fig-cap: The proportion of thermogenic emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the thermogenic sources of emissions. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+
+source_data_sector %>%
+  filter(lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code == "SHEEP" | lineitem_code == "PIGS" | lineitem_code =="C6") %>%
+  filter(source_type=="Thermogenic") %>%
+    ggplot(aes(x=as.factor(year), y = co2e_kt_sect)) +
+  geom_bar(stat="identity", position = "stack", aes(fill =lineitem_code)) +
+    scale_fill_manual(
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
+    values = sector_pal) +
+  ylab(bquote(atop(bold(.(Proportion~of~carbon~emissions)), (bold(.(Kt~CO[2]~e)))))) +
+  labs(
+       x = "Year", 
+       fill = "Sector") + 
+  theme_bw() +
+  theme_m.tl
+  
+```
+
+```{r}
+#| title: Biogenic by Sector
+#| fig-cap: The proportion of biogenic emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the biogenic sources of emissions. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+
+source_data_sector %>%
+  filter(lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code == "SHEEP" | lineitem_code == "PIGS" | lineitem_code =="C6") %>%
+  filter(source_type=="Biogenic") %>%
+    ggplot(aes(x=as.factor(year), y = co2e_kt_sect)) +
+  geom_bar(stat="identity", position = "stack", aes(fill =lineitem_code)) +
+    scale_fill_manual(
+    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
+    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
+    values = sector_pal) +
+  ylab(bquote(atop(bold(.(Proportion~of~carbon~emissions)), (bold(.(Kt~CO[2]~e)))))) +
+  labs(
+       x = "Year", 
+       fill = "Sector") + 
+  theme_bw() +
+  theme_m.tl
+```
+
+# Detailed Emission Sources
 
 ## Column {width="40%"}
 
@@ -272,45 +404,8 @@ c_data %>%
     ggplot(aes(x = as.factor(year), y = values/1000000, fill = variables)) +
     geom_bar(position = "stack", stat = "identity") +
      scale_fill_manual(
-    labels = c("Diesel", 
-               "Electricity", 
-               "Other fuels",
-               "Renewable electricity",
-               "Renewable heat",
-               "Bedding", 
-               "Biochar", 
-               "Disposal of carcasses", 
-               "Feed", 
-               "Fertiliser", 
-               "Lime", 
-               "Pesticides", 
-               "Refrigerant losses", 
-               "Transport", "Waste",
-               "Fermentation, feed & digestion",
-               "Manure management",
-               "Inorganic & imported organic manure",
-               "Grazing manure management", 
-               "Veg & crop N residues"),
-     limits = c("co2_dir_emissions_diesel_kgco2e", 
-                "co2_dir_emissions_electricity_kgco2e",
-                "co2_dir_emissions_other_fuels_kgco2e", 
-                "co2_dir_emissions_renewable_electricity_kgco2e",
-                "co2_dir_emissions_renewable_heat_kgco2e",
-                "co2_dir_ind_emissions_bedding_kgco2e",
-                "co2_dir_ind_emissions_biochar_kgco2e",
-                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
-                "co2_dir_ind_emissions_feed_kgco2e",
-                "co2_dir_ind_emissions_fertiliser_kgco2e",
-               "co2_dir_ind_emissions_lime_kgco2e",
-                "co2_dir_ind_emissions_pesticides_kgco2e",
-                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
-                "co2_dir_ind_emissions_transport_kgco2e",
-                "co2_dir_ind_emissions_waste_kgco2e",
-                "methane_enteric_fermentation_feed_digestion_kgco2e",
-                "methane_enteric_manure_mgmt_kgco2e",
-                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
-                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
-                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+    labels = c(detail_labels),
+     limits = c(detail_limits),
        values = detail_ghg_pal) +
      ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
     labs( x = "Year", fill = "Emissions source")+
@@ -330,45 +425,8 @@ c_data %>%
     ggplot(aes(x = as.factor(year), y = values/1000000, fill = variables)) +
     geom_bar(position = "stack", stat = "identity") +
      scale_fill_manual(
-    labels = c("Diesel", 
-               "Electricity", 
-               "Other fuels",
-               "Renewable electricity",
-               "Renewable heat",
-               "Bedding", 
-               "Biochar", 
-               "Disposal of carcasses", 
-               "Feed", 
-               "Fertiliser", 
-               "Lime", 
-               "Pesticides", 
-               "Refrigerant losses", 
-               "Transport", "Waste",
-               "Fermentation, feed & digestion",
-               "Manure management",
-               "Inorganic & imported organic manure",
-               "Grazing manure management", 
-               "Veg & crop N residues"),
-     limits = c("co2_dir_emissions_diesel_kgco2e", 
-                "co2_dir_emissions_electricity_kgco2e",
-                "co2_dir_emissions_other_fuels_kgco2e", 
-                "co2_dir_emissions_renewable_electricity_kgco2e",
-                "co2_dir_emissions_renewable_heat_kgco2e",
-                "co2_dir_ind_emissions_bedding_kgco2e",
-                "co2_dir_ind_emissions_biochar_kgco2e",
-                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
-                "co2_dir_ind_emissions_feed_kgco2e",
-                "co2_dir_ind_emissions_fertiliser_kgco2e",
-                "co2_dir_ind_emissions_lime_kgco2e",
-                "co2_dir_ind_emissions_pesticides_kgco2e",
-                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
-                "co2_dir_ind_emissions_transport_kgco2e",
-                "co2_dir_ind_emissions_waste_kgco2e",
-                "methane_enteric_fermentation_feed_digestion_kgco2e",
-                "methane_enteric_manure_mgmt_kgco2e",
-                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
-                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
-                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+    labels = c(detail_labels),
+     limits = c(detail_limits),
        values = detail_ghg_pal) +
     ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
     labs( x = "Year", fill = "Emissions source")+
@@ -390,45 +448,8 @@ c_data %>%
     ggplot(aes(x = as.factor(year), y = values/1000000, fill = variables)) +
     geom_bar(position = "stack", stat = "identity") +
      scale_fill_manual(
-    labels = c("Diesel", 
-               "Electricity", 
-               "Other fuels",
-               "Renewable electricity",
-               "Renewable heat",
-               "Bedding", 
-               "Biochar", 
-               "Disposal of carcasses", 
-               "Feed", 
-               "Fertiliser", 
-               "Lime", 
-               "Pesticides", 
-               "Refrigerant losses", 
-               "Transport", "Waste",
-               "Fermentation, feed & digestion",
-               "Manure management",
-               "Inorganic & imported organic manure",
-               "Grazing manure management", 
-               "Veg & crop N residues"),
-     limits = c("co2_dir_emissions_diesel_kgco2e", 
-                "co2_dir_emissions_electricity_kgco2e",
-                "co2_dir_emissions_other_fuels_kgco2e", 
-                "co2_dir_emissions_renewable_electricity_kgco2e",
-                "co2_dir_emissions_renewable_heat_kgco2e",
-                "co2_dir_ind_emissions_bedding_kgco2e",
-                "co2_dir_ind_emissions_biochar_kgco2e",
-                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
-                "co2_dir_ind_emissions_feed_kgco2e",
-                "co2_dir_ind_emissions_fertiliser_kgco2e",
-                "co2_dir_ind_emissions_lime_kgco2e",
-                "co2_dir_ind_emissions_pesticides_kgco2e",
-                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
-                "co2_dir_ind_emissions_transport_kgco2e",
-                "co2_dir_ind_emissions_waste_kgco2e",
-                "methane_enteric_fermentation_feed_digestion_kgco2e",
-                "methane_enteric_manure_mgmt_kgco2e",
-                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
-                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
-                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+    labels = c(detail_labels),
+     limits = c(detail_limits),
        values = detail_ghg_pal) +
     ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
     labs( x = "Year", fill = "Emissions source")+
@@ -449,45 +470,8 @@ c_data %>%
     ggplot(aes(x = as.factor(year), y = values/1000000, fill = variables)) +
     geom_bar(position = "stack", stat = "identity") +
      scale_fill_manual(
-    labels = c("Diesel", 
-               "Electricity", 
-               "Other fuels",
-               "Renewable electricity",
-               "Renewable heat",
-               "Bedding", 
-               "Biochar", 
-               "Disposal of carcasses", 
-               "Feed", 
-               "Fertiliser", 
-               "Lime", 
-               "Pesticides", 
-               "Refrigerant losses", 
-               "Transport", "Waste",
-               "Fermentation, feed & digestion",
-               "Manure management",
-               "Inorganic & imported organic manure",
-               "Grazing manure management", 
-               "Veg & crop N residues"),
-     limits = c("co2_dir_emissions_diesel_kgco2e", 
-                "co2_dir_emissions_electricity_kgco2e",
-                "co2_dir_emissions_other_fuels_kgco2e", 
-                "co2_dir_emissions_renewable_electricity_kgco2e",
-                "co2_dir_emissions_renewable_heat_kgco2e",
-                "co2_dir_ind_emissions_bedding_kgco2e",
-                "co2_dir_ind_emissions_biochar_kgco2e",
-                "co2_dir_ind_emissions_disposal_of_carcasses_kgco2e",
-                "co2_dir_ind_emissions_feed_kgco2e",
-                "co2_dir_ind_emissions_fertiliser_kgco2e",
-                "co2_dir_ind_emissions_lime_kgco2e",
-                "co2_dir_ind_emissions_pesticides_kgco2e",
-                "co2_dir_ind_emissions_refrigerant_losses_kgco2e",
-                "co2_dir_ind_emissions_transport_kgco2e",
-                "co2_dir_ind_emissions_waste_kgco2e",
-                "methane_enteric_fermentation_feed_digestion_kgco2e",
-                "methane_enteric_manure_mgmt_kgco2e",
-                "nitrous_oxide_vol_inorganic_and_imp_org_man_soil_kgco2e",
-                "nitrous_oxide_vol_grazing_dep_man_mgmt_org_man_soil_kgco2e",
-                "nitrous_oxide_veg_crop_n_residues_kgco2e"),
+    labels = c(detail_labels),
+     limits = c(detail_limits),
        values = detail_ghg_pal) +
     ylab(bquote(atop(bold(.(GHG~Emissions~(Kt~CO[2]~e)))))) +
     labs( x = "Year", fill = "Emissions source")+
@@ -496,8 +480,6 @@ c_data %>%
   theme_m.rl
 
 ```
-
-
 
 
 # Data
@@ -540,7 +522,7 @@ datatable(other_dict, filter = list(position = 'topleft', clear = FALSE),
 ### Row {height="25%"}
 
 ::: {.card title="Download the data"}
-[Download carbon data excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HAcarbon_master_2023.xlsx)
+[Download carbon data excel file](https://github.com/HAcarbon/dash/raw/main/docs/data/HA_carbon_emission_data.xlsx)
 :::
 
 ### Row {.tabset height="75%"}
@@ -554,6 +536,4 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 
 -   Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
 
-
--   The current data set only focuses on the main livestock enterprises at this time due to inconsistencies in report output between years.
 :::
