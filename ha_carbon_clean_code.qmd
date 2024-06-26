@@ -467,6 +467,8 @@ c_data %>%
 
 ```
 
+
+
 # Data
 
 ## Column {.tabset width="70%"}
