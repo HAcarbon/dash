@@ -95,28 +95,6 @@ mutate(emission = values/1000000) %>%
   
 ```
 
-```{r total GHG emission graph}
-#| title: Emissons by Livestock Sector
-#| fig-cap: The total annual kilotonnes of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
-
-
-carbon_data %>%
-  mutate(carbon_equiv_tot = total_co2e_emissions_from_farming_kgco2e/1000000) %>%
-  filter(lineitem_code != "WHOLE_FARM") %>%
-ggplot( aes(x = as.factor(year), y = carbon_equiv_tot, fill = lineitem_code)) +
-   geom_bar(position="stack", stat="identity") +
-    scale_fill_manual(
-    labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"),
-    limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"),
-    values = sector_pal) +
-  ylab(bquote(atop(bold(.(Total~Carbon~Equivalent~Emissions)), (bold(.(Kt~CO[2]~e)))))) +
-  labs(
-    x = "Year",
-    fill = "Sector") + 
-  theme_bw()+
-  theme_m.tl
-```
-
 ```{r direct carbon graph}
 #| title: Direct Carbon
 #| fig-cap: The total annual kilotonnes of direct (Scope 1) carbon dioxide emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
@@ -246,11 +224,41 @@ bslib::value_box(
 
 ### Row {height="75%"}
 
-```{r leaflet b}
+::: panel-tabset
+## Definitions
 
- carbon_map
+The term **biogenic** refers to the emissions that come from **natural** **sources**, that were originally removed from the atmosphere and would eventually cycle back to the atmosphere due to degradation.
 
-```
+The term **thermogenic** refers to the emissions produced by the effect of heat and pressure (on fossil fuels such as oil, coal, and natural gas) from **anthropogenic activity**.
+
+## Contributing sources
+
+| Emission source                                   |   GHG group    | Emission type  |
+|--------------------------------|:------------------:|:------------------:|
+| Enteric fermentation                              |    Methane     |    Biogenic    |
+| Manure Management                                 |    Methane     |    Biogenic    |
+| Diesel                                            | Carbon Dioxide |  Thermogenic   |
+| Electricity                                       | Carbon Dioxide |  Thermogenic   |
+| Other fuels                                       | Carbon Dioxide |  Thermogenic   |
+| Renewable electricity                             | Carbon Dioxide |  Thermogenic   |
+| Renewable heat                                    | Carbon Dioxide |  Thermogenic   |
+| Fertiliser                                        | Carbon Dioxide |  Thermogenic   |
+| Lime                                              | Carbon Dioxide |  Thermogenic   |
+| Feed                                              | Carbon Dioxide |  Thermogenic   |
+| Bedding                                           | Carbon Dioxide |  Thermogenic   |
+| Pesticides                                        | Carbon Dioxide |  Thermogenic   |
+| Waste plastic/packaging                           | Carbon Dioxide |  Thermogenic   |
+| Disposal of carcasses                             | Carbon Dioxide |  Thermogenic   |
+| Transport                                         | Carbon Dioxide |  Thermogenic   |
+| Inorganic & imported organic manure input to soil | Nitrous Oxide  | Combination \* |
+| Grazing deposition                                | Nitrous Oxide  | Combination \* |
+| Manure management & organic manure input to soil  | Nitrous Oxide  | Combination \* |
+| Crop N residues                                   | Nitrous Oxide  | Combination \* |
+
+: {.striped .hover}
+
+*Note: \* Due to the current scientific uncertainty regarding the classification of nitrous oxide emissions as biogenic or thermogenic, the emission sources which fall under nitrous oxide are currently identified as a 'combination'.*
+:::
 
 ## Column {.tabset width="60%"}
 
@@ -276,30 +284,9 @@ source_data_wf %>%
 
 ```
 
-```{r percent contribution whole farm}
-#| title: Proportion by Source Type
-#| fig-cap: The proportion of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023 grouped by emisson source type. Colours indicate the contribution of each source type to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
-
-source_data_wf %>% 
-  ggplot(aes(x=as.factor(year), y = prop_contrib, fill = source_type)) +
-  geom_bar(stat="identity", position = "stack") +
-      scale_fill_manual(
-    labels = emission_source_labels,
-    limits = emission_source_limits,
-    values = emission_source_pal) +
-  ylab(bquote(atop(bold(.(Proportion~of~carbon~emissions)), (bold(.(Kt~CO[2]~e)))))) +
-  labs(
-       x = "Year", 
-       fill = "Emission source type",
-       colour ="Emission source type") + 
-  theme_bw() +
-  theme_m.tl
-
-```
-
 ```{r thermo per sector (bio and thermo)}
 #| title: Thermogenic by Sector
-#| fig-cap: The proportion of thermogenic emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the thermogenic sources of emissions. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total thermogenic emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the thermogenic sources of emissions. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 source_data_sector %>%
   filter(lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code == "SHEEP" | lineitem_code == "PIGS" | lineitem_code =="C6") %>%
@@ -321,7 +308,7 @@ source_data_sector %>%
 
 ```{r}
 #| title: Biogenic by Sector
-#| fig-cap: The proportion of biogenic emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the biogenic sources of emissions. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
+#| fig-cap: The total biogenic emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the biogenic sources of emissions. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
 
 source_data_sector %>%
   filter(lineitem_code == "DAIRY" | lineitem_code == "BEEF" | lineitem_code == "SHEEP" | lineitem_code == "PIGS" | lineitem_code =="C6") %>%
@@ -384,6 +371,12 @@ bslib::value_box(
 ```
 
 ## Column {.tabset width="60%"}
+
+```{r total GHG emission graph}
+#| title: Emissons by Livestock Sector #| fig-cap: The total annual kilotonnes of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023. Colours indicate the contribution of each sector to the total emission output. Equivalent emissions were calculated using the IPCC AR5 guidelines on Global Warming Potential (GWP) equivalents.}
+
+carbon_data %>% mutate(carbon_equiv_tot = total_co2e_emissions_from_farming_kgco2e/1000000) %>% filter(lineitem_code != "WHOLE_FARM") %>% ggplot( aes(x = as.factor(year), y = carbon_equiv_tot, fill = lineitem_code)) + geom_bar(position="stack", stat="identity") + scale_fill_manual( labels = c("Dairy", "Beef", "Pigs", "Sheep", "Oilseed Rape"), limits = c("DAIRY", "BEEF", "PIGS", "SHEEP", "C6"), values = sector_pal) + ylab(bquote(atop(bold(.(TotalCarbonEquivalent~Emissions)), (bold(.(KtCO[2]~e)))))) + labs( x = "Year", fill = "Sector") + theme_bw()+ theme_m.tl
+```
 
 ```{r}
 #| title: Dairy
