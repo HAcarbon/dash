@@ -18,12 +18,11 @@ source("master_scripts.R")
 
 ```
 
-# Emissions 
+# Emissions
 
 ## Column {width="40%"}
 
 ### Row {title="summaryboxes" height="25%"}
-
 
 ```{r net emissions in 2022 value boxa}
 bslib::value_box(
@@ -57,16 +56,14 @@ bslib::value_box(
 
 ### Row {height="75%"}
 
-
 ```{r leafleta}
 carbon_map
 ```
 
 ## Column {Width="60%"}
 
-
-
 ### Row {.tabset}
+
 ```{r ghg contributions graph}
 #| title: Emissions by GHG type
 #| fig-cap: The total annual kilotonnes of green house gas (GHG) emissions (based on GWP equivlaent calculations) produced per year on the Harper Adams Future Farm presenting the quantity of the four types of GHG recorded during teh carbon calculation. Colours represent different GHG types.Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
@@ -119,7 +116,6 @@ ggplot( aes(x = as.factor(year), y = carbon_equiv_tot, fill = lineitem_code)) +
   theme_bw()+
   theme_m.tl
 ```
-
 
 ```{r direct carbon graph}
 #| title: Direct Carbon
@@ -213,7 +209,6 @@ ggplot( aes(x = as.factor(year), y = nitrous_oxide, fill = lineitem_code)) +
 
 ```
 
-
 # Biogenic & Themorgenic Emissions
 
 ## Column {width="40%"}
@@ -258,6 +253,7 @@ bslib::value_box(
 ```
 
 ## Column {.tabset width="60%"}
+
 ```{r total contribution whole farm}
 #| title: Total by Source type
 #| fig-cap: The total annual kilotonnes of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023 grouped by emisson source type. Colours indicate the contribution of each source type to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
@@ -280,7 +276,6 @@ source_data_wf %>%
 
 ```
 
-
 ```{r percent contribution whole farm}
 #| title: Proportion by Source Type
 #| fig-cap: The proportion of carbon dioxide equivalent emissions produced from the Harper Adams Future Farm for the years 2022 to 2023 grouped by emisson source type. Colours indicate the contribution of each source type to the total emission output. Equivalent emissions were calculated using the [IPCC AR5 report](https://ar5-syr.ipcc.ch/ipcc/ipcc/resources/pdf/IPCC_SynthesisReport.pdf) guidelines on Global Warming Potential (GWP) equivalents. 
@@ -301,7 +296,6 @@ source_data_wf %>%
   theme_m.tl
 
 ```
-
 
 ```{r thermo per sector (bio and thermo)}
 #| title: Thermogenic by Sector
@@ -390,7 +384,6 @@ bslib::value_box(
 ```
 
 ## Column {.tabset width="60%"}
-
 
 ```{r}
 #| title: Dairy
@@ -481,7 +474,6 @@ c_data %>%
 
 ```
 
-
 # Data
 
 ## Column {.tabset width="70%"}
@@ -535,5 +527,4 @@ This data comprise the output results from the [AgreCalc Farm Carbon Calculator]
 -   Due to the current format of the output provided by Agrecalc, there are limitations on the knowledge relating to certain assumptions or calculations which were made to results in the current presented data. Therefore data display is somewhat limited.
 
 -   Original data is in kg CO~2~e. Data presented in this dashboard has been converted to Kilotonnes (Kt) CO~2~e with the except of data presented in the map which is in tonnes (t) CO~2~e.
-
 :::

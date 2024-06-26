@@ -108,6 +108,19 @@ prev_net_per_kg <- as.numeric(as.list(carbon_data %>%
                                           filter(year == previous_year) %>%
                                           select(emissions_per_unit_of_output_kgco2e_kg_output) ))
 
+
+latest_net<- as.numeric(as.list(carbon_data %>% 
+                                          filter(lineitem_code=="WHOLE_FARM") %>% 
+                                          select(year, net_emissions_from_land_use) %>% 
+                                          filter(year == latest_year) %>%
+                                          select(net_emissions_from_land_use) ))
+
+prev_net <- as.numeric(as.list(carbon_data %>% 
+                                        filter(lineitem_code=="WHOLE_FARM") %>% 
+                                        select(year, net_emissions_from_land_use) %>% 
+                                        filter(year == previous_year) %>%
+                                        select(net_emissions_from_land_use) ))
+
 net_per_kg_reduction <- latest_net_per_kg-prev_net_per_kg
 
 ### detailed GHG data prep
@@ -226,4 +239,4 @@ source_data_sector <-
     ungroup() %>%
     group_by(year, source_type) %>%
     mutate(source_tot = sum(co2e_kt_sect),
-           sourc_prop = co2e_kt_sect/source_tot) %>% view()
+           sourc_prop = co2e_kt_sect/source_tot) 
